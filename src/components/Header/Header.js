@@ -6,14 +6,22 @@ import './Header.css';
 import Logo from '../Logo/Logo';
 import Navigation from '../Navigation/Navigation';
 import AccountLink from '../AccountLink/AccountLink';
+import Burger from '../Burger/Burger';
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [loggedIn, setIsLoggedIn] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
     <header className="header">
       <div className="header__block">
+        <Burger
+          loggedIn={loggedIn}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+        />
         <Logo />
-        {isLoggedIn ? (
+        {!loggedIn ? (
           <>
             <Navigation /> <AccountLink />
           </>

@@ -2,28 +2,21 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './Navigation.css';
 
-function Navigation({ isBurgerMenu, onClose }) {
+function Navigation({ isMenuOpened, onClose }) {
   const location = useLocation();
 
   return (
-    <nav className={`navigation ${!isBurgerMenu ? 'navigation_hidden' : ''}`}>
-      <ul
-        className={`navigation__menu-wrapper ${
-          isBurgerMenu ? 'navigation__menu-wrapper_burger' : ''
-        }`}
-      >
+    <nav className={`navigation ${isMenuOpened && 'navigation_opened'}`}>
+      <ul className={`navigation__menu-wrapper`}>
         <li
-          className={`navigation__menu-item ${
-            isBurgerMenu ? '' : 'navigation__menu-item_hidden'
-          }`}
+          className={`navigation__menu-item  navigation__menu-item_hidden
+          `}
         >
           <Link
             to="/"
             onClick={onClose}
             className={`navigation__link ${
-              isBurgerMenu ? 'navigation__link_side-menu' : ''
-            } ${
-              location.pathname === '/' && isBurgerMenu
+              location.pathname === '/'
                 ? 'navigation__link_side-menu-active'
                 : ''
             }`}
@@ -36,13 +29,11 @@ function Navigation({ isBurgerMenu, onClose }) {
             to="/movies"
             onClick={onClose}
             className={`navigation__link ${
-              isBurgerMenu ? 'navigation__link_side-menu' : ''
-            } ${
-              location.pathname === '/movies' && !isBurgerMenu
+              location.pathname === '/movies'
                 ? 'navigation__link_header-active'
                 : ''
             } ${
-              location.pathname === '/movies' && isBurgerMenu
+              location.pathname === '/movies'
                 ? 'navigation__link_side-menu-active'
                 : ''
             }`}
@@ -55,13 +46,11 @@ function Navigation({ isBurgerMenu, onClose }) {
             to="/saved-movies"
             onClick={onClose}
             className={`navigation__link ${
-              isBurgerMenu ? 'navigation__link_side-menu' : ''
-            } ${
-              location.pathname === '/saved-movies' && !isBurgerMenu
+              location.pathname === '/saved-movies'
                 ? 'navigation__link_header-active'
                 : ''
             } ${
-              location.pathname === '/saved-movies' && isBurgerMenu
+              location.pathname === '/saved-movies'
                 ? 'navigation__link_side-menu-active'
                 : ''
             }`}
