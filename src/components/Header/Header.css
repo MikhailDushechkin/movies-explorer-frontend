@@ -1,5 +1,12 @@
 .header {
   max-width: 100%;
+  width: 100%;
+  position: fixed;
+  background: #ffffff;
+}
+
+.header_blue {
+  background: #465DFF;
 }
 
 .header__block {
@@ -17,10 +24,10 @@
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
-  color: #000000;
+  color: #ffffff;
   text-decoration: none;
   margin-right: 30px;
-  transition: opacity .3s linear;
+  transition: opacity 0.3s linear;
 }
 
 .header__link:hover {
@@ -37,4 +44,16 @@
   color: #000000;
   background: #2be080;
   border-radius: 3px;
+}
+
+@media screen and (max-width: 768px) {
+  .header__block {
+    padding: 18px 30px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .header__block {
+    padding: 18px 14px;
+  }
 }

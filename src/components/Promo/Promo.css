@@ -1,0 +1,44 @@
+.promo {
+  background: #465dff;
+  background-image: url(../../images/main-screen.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 320px;
+  min-height: 598px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.promo__content {
+  max-width: 730px;
+  margin: 0 auto;
+}
+
+.promo__title {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 58px;
+  text-align: center;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 710px) {
+  .promo {
+    background-size: 248px;
+  }
+
+  .promo__content {
+    max-width: 300px;
+  }
+  
+  .promo__title {
+    font-size: 31px;
+    line-height: 39px;
+    letter-spacing: -0.04em;
+  }
+}
