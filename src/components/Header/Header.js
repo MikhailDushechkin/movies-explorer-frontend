@@ -23,7 +23,7 @@ function Header() {
           setIsMenuOpen={setIsMenuOpen}
         />}
         <Logo />
-        {loggedIn ? (
+        {!loggedIn ? (
           <>
             <Navigation /> <AccountLink />
           </>
