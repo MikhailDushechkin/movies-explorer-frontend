@@ -2,7 +2,7 @@
   padding: 6px 10px;
   border: 2px solid rgba(170, 170, 170, 0.2);
   border-radius: 50px;
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
@@ -32,3 +32,4 @@
     display: none;
   }
 }
+

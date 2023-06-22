@@ -2,6 +2,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './Navigation.css';
 
+import AccountLink from '../AccountLink/AccountLink';
+
 function Navigation({ isMenuOpened, onClose }) {
   const location = useLocation();
 
@@ -58,6 +60,9 @@ function Navigation({ isMenuOpened, onClose }) {
             Сохранённые фильмы
           </Link>
         </li>
+        {isMenuOpened && <li className="navigation__menu-item">
+          <AccountLink isOpenedMenu={isMenuOpened}/>
+          </li>}
       </ul>
     </nav>
   );

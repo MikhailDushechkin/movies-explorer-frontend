@@ -3,7 +3,7 @@
 }
 
 .portfolio__title {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;
@@ -33,7 +33,7 @@
   justify-content: space-between;
   align-items: center;
   color: #000000;
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 30px;
   line-height: 50px;

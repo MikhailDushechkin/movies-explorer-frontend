@@ -19,7 +19,7 @@
 }
 
 .card__title {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 500;
   font-size: 15px;
   line-height: 18px;
@@ -31,7 +31,7 @@
 }
 
 .card__duration {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 13px;
   line-height: 18px;
@@ -59,7 +59,7 @@
   border-radius: 30px;
   border: none;
   margin: 18px auto 0 auto;
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 12px;
   line-height: 11px;

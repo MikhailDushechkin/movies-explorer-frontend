@@ -1,0 +1,41 @@
+.auth-screen {
+  max-width: 396px;
+  margin: 0 auto;
+  padding: 70px 0 0 0;
+}
+
+.auth-screen__text {
+  margin-top: 16px;
+  margin-bottom: 0;
+  font-family: "Inter", "Arial", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.21;
+  text-align: center;
+}
+
+.auth-screen__link {
+  text-decoration: none;
+  color: #FF6838;
+  transition: opacity 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+  .auth-screen {
+    padding: 232px 0 0 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .auth-screen {
+    padding-top: 56px;
+    padding-bottom: 30px;
+    max-width: 260px;
+  }
+
+  .auth-screen__text {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+}

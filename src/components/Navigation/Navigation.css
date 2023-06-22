@@ -13,6 +13,8 @@
 
 .navigation__menu-item:last-child {
   margin: 0;
+  position: absolute;
+  bottom: 90px;
 }
 
 .navigation__menu-item_hidden {
@@ -20,7 +22,7 @@
 }
 
 .navigation__link {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 13px;
   line-height: 18px;
@@ -111,5 +113,9 @@
 @media screen and (max-width: 500px) {
   .navigation__link_side-menu {
     padding-bottom: 7px;
+  }
+
+  .navigation__menu-item:last-child {
+    bottom: 46px;
   }
 }

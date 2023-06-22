@@ -9,8 +9,8 @@
   height: 38px;
 }
 
-@media screen and (max-width: 620px) {
+@media screen and (max-width: 520px) {
   .logo_place_auth {
-    margin: 0 auto;
+    justify-content: center;
   }
 }

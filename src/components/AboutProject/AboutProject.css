@@ -8,7 +8,7 @@
 }
 
 .about-project__title {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 22px;
   line-height: 27px;
@@ -32,7 +32,7 @@
 }
 
 .about-project__subtitle {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
@@ -41,7 +41,7 @@
 }
 
 .about-project__description {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -59,7 +59,7 @@
 }
 
 .about-project__stage-text {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
@@ -82,7 +82,7 @@
 }
 
 .about-project__stage-caption {
-  font-family: 'Inter';
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
@@ -133,6 +133,7 @@
   .about-project__subtitle {
     font-size: 18px;
     line-height: 22px;
+    letter-spacing: -0.72px;
   }
 
   .about-project__description {

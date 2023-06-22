@@ -23,9 +23,9 @@ function Header() {
           setIsMenuOpen={setIsMenuOpen}
         />}
         <Logo />
-        {!loggedIn ? (
+        {loggedIn ? (
           <>
-            <Navigation /> <AccountLink />
+            <Navigation isMenuOpened={isMenuOpen} /> <AccountLink isMenuOpened={isMenuOpen}/>
           </>
         ) : (
           <nav className="header__menu">
