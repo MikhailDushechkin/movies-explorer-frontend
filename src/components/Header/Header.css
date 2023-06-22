@@ -3,6 +3,7 @@
   width: 100%;
   position: fixed;
   background: #ffffff;
+  z-index: 5;
 }
 
 .header_blue {

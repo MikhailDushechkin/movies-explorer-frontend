@@ -13,8 +13,6 @@
 
 .navigation__menu-item:last-child {
   margin: 0;
-  position: absolute;
-  bottom: 90px;
 }
 
 .navigation__menu-item_hidden {
@@ -92,6 +90,11 @@
   .navigation__menu-item {
     position: relative;
     z-index: 10;
+  }
+
+  .navigation__menu-account-link {
+    position: absolute;
+    bottom: 90px;
   }
 
   .navigation__menu-item_hidden {

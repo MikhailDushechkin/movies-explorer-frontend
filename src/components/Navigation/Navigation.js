@@ -60,7 +60,7 @@ function Navigation({ isMenuOpened, onClose }) {
             Сохранённые фильмы
           </Link>
         </li>
-        {isMenuOpened && <li className="navigation__menu-item">
+        {isMenuOpened && <li className="navigation__menu-item navigation__menu-account-link">
           <AccountLink isOpenedMenu={isMenuOpened}/>
           </li>}
       </ul>

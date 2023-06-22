@@ -17,13 +17,13 @@ function Header() {
   return (
     <header className={`header ${(location.pathname === '/' && !loggedIn) && 'header_blue'}`}>
       <div className="header__block">
-        {loggedIn && <Burger
+        {!loggedIn && <Burger
           loggedIn={loggedIn}
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
         />}
         <Logo />
-        {loggedIn ? (
+        {!loggedIn ? (
           <>
             <Navigation isMenuOpened={isMenuOpen} /> <AccountLink isMenuOpened={isMenuOpen}/>
           </>
