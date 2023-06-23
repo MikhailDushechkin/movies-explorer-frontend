@@ -5,6 +5,8 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  width: 212px;
+  padding-left: 62px;
 }
 
 .navigation__menu-item {

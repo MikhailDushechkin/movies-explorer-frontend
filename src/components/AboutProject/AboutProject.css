@@ -1,8 +1,6 @@
 .about-project {
   padding: 110px 70px;
-}
-
-.about-project__container {
+  box-sizing: border-box;
   margin: 0 auto;
   max-width: 1280px;
 }
@@ -96,11 +94,12 @@
     padding: 90px 50px;
   }
 
-  .about-project__description {
-    margin: 22px 0 0 0;
+  .about-project__description-block {
+    gap: 30px;
   }
 
   .about-project__description {
+    margin: 22px 0 0 0;
     font-size: 12px;
     line-height: 18px;
   }

@@ -23,6 +23,10 @@
   border-bottom: 1px solid #e8e8e8;
 }
 
+.portfolio__item:first-of-type {
+  padding-top: 0;
+}
+
 .portfolio__item:last-of-type {
   border-bottom: none;
 }
@@ -46,6 +50,7 @@
 
 .portfolio__link-text {
   margin: 0;
+  letter-spacing: -1.12px;
 }
 
 .portfolio__link-symbol {
