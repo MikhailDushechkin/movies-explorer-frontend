@@ -36,7 +36,9 @@
 }
 
 .search-form__input:focus {
-  outline: 0;
+  border-bottom: 1px solid #4285f4;
+  outline: none;
+  width: 90%;
 }
 
 .search-form__input::placeholder {
