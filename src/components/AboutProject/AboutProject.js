@@ -27,14 +27,14 @@ function AboutProject() {
             </li>
           </ul>
           <div className="about-project__timeline">
-            <div className="about-project__stage about-project__stage_first">
-              <p className="about-project__stage-text about-project__stage-text_green">
+            <div className="about-project__stage about-project__stage_stage_first">
+              <p className="about-project__stage-text about-project__stage-text_color_green">
                 1 неделя
               </p>
               <p className="about-project__stage-caption">Back-end</p>
             </div>
-            <div className="about-project__stage about-project__stage_second">
-              <p className="about-project__stage-text about-project__stage-text_gray">
+            <div className="about-project__stage about-project__stage_stage_second">
+              <p className="about-project__stage-text about-project__stage-text_color_grey">
                 4 недели
               </p>
               <p className="about-project__stage-caption">Front-end</p>

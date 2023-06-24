@@ -17,7 +17,7 @@
   margin: 0;
 }
 
-.navigation__menu-item_hidden {
+.navigation__menu-item_type_hidden {
   display: none;
 }
 
@@ -64,7 +64,7 @@
     opacity: 0;
   }
 
-  .navigation_opened {
+  .navigation_type_opened {
     pointer-events: all;
     visibility: visible;
     opacity: 1;
@@ -99,7 +99,7 @@
     bottom: 90px;
   }
 
-  .navigation__menu-item_hidden {
+  .navigation__menu-item_type_hidden {
     display: block;
   }
 

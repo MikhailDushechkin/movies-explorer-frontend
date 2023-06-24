@@ -37,10 +37,10 @@ function Profile({ user }) {
           isFormValid={isFormValid}
           isEditing={isEditing}
         >
-          <label className="form__input-container form__input-container_edit-profile">
+          <label className="form__input-container form__input-container_type_edit-profile">
             Имя
             <input
-              className={`form__input form__input_edit-profile ${
+              className={`form__input form__input_type_edit-profile ${
                 errors.name ? 'form__input_style_error' : ''
               }`}
               id="name-input"
@@ -55,10 +55,10 @@ function Profile({ user }) {
               value={values.name || ''}
             />
           </label>
-          <label className="form__input-container form__input-container_edit-profile">
+          <label className="form__input-container form__input-container_type_edit-profile">
             E-mail
             <input
-              className={`form__input form__input_edit-profile ${
+              className={`form__input form__input_type_edit-profile ${
                 errors.email ? 'form__input_style_error' : ''
               }`}
               id="email-input"
@@ -73,20 +73,20 @@ function Profile({ user }) {
           </label>
           <div
             className={`form__errors-wrapper ${
-              errors.name || errors.email ? 'form__errors-wrapper_active' : ''
+              errors.name || errors.email ? 'form__errors-wrapper_type_active' : ''
             }`}
           >
             <div className="form__error-wrapper">
               <p
                 className={`form__error-name ${
-                  errors.name ? 'form__error-name_active' : ''
+                  errors.name ? 'form__error-name_type_active' : ''
                 }`}
               >
                 Имя:
               </p>
               <span
-                className={`form__input-error form__input-error_edit-profile ${
-                  errors.name ? 'form__input-error_active' : ''
+                className={`form__input-error form__input-error_type_edit-profile ${
+                  errors.name ? 'form__input-error_type_active' : ''
                 }`}
               >
                 {errors.name || ''}
@@ -95,14 +95,14 @@ function Profile({ user }) {
             <div className="form__error-wrapper">
               <p
                 className={`form__error-name ${
-                  errors.email ? 'form__error-name_active' : ''
+                  errors.email ? 'form__error-name_type_active' : ''
                 }`}
               >
                 E-mail:
               </p>
               <span
-                className={`form__input-error form__input-error_edit-profile ${
-                  errors.email ? 'form__input-error_active' : ''
+                className={`form__input-error form__input-error_type_edit-profile ${
+                  errors.email ? 'form__input-error_type_active' : ''
                 }`}
               >
                 {errors.email || ''}
@@ -112,18 +112,18 @@ function Profile({ user }) {
         </Form>
         <div
           className={`profile__actions-wrapper ${
-            isEditing ? 'profile__actions-wrapper_hidden' : ''
+            isEditing ? 'profile__actions-wrapper_type_hidden' : ''
           }`}
         >
           <button
-            className="profile__button-action profile__button-action_edit"
+            className="profile__button-action profile__button-action_type_edit"
             type="button"
             onClick={handleEditClick}
           >
             Редактировать
           </button>
           <button
-            className="profile__button-action profile__button-action_exit"
+            className="profile__button-action profile__button-action_type_exit"
             type="button"
           >
             Выйти из аккаунта

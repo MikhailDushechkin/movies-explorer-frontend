@@ -1,3 +1,13 @@
 @import url('./vendor/normalize.css');
 @import url('./vendor/fonts/font.css');
-@import url('./components/Common/page.css');
+
+.page {
+  width: 100%;
+  position: relative;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

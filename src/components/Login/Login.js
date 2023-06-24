@@ -35,7 +35,7 @@ function Login() {
           />
           <span
             className={`form__input-error ${
-              errors.email ? "form__input-error_active" : ""
+              errors.email ? "form__input-error_type_active" : ""
             }`}
           >
             {errors.email || ""}
@@ -60,7 +60,7 @@ function Login() {
           />
           <span
             className={`form__input-error ${
-              errors.password ? "form__input-error_active" : ""
+              errors.password ? "form__input-error_type_active" : ""
             }`}
           >
             {errors.password || ""}

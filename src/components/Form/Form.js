@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 import './Form.css';
 
@@ -27,9 +27,17 @@ function Form({
         form={`${name}`}
         className={`form__button-submit ${
           name === 'edit-profile' && !isEditing
-            ? 'form__button-submit_hidden'
+            ? 'form__button-submit_type_hidden'
             : ''
-        } ${location.pathname === '/signup' && 'form__button-submit_signup'} ${location.pathname === '/signin' && 'form__button-submit_signin'}`}
+        } ${
+          location.pathname === '/signup'
+            ? 'form__button-submit_type_signup'
+            : ''
+        } ${
+          location.pathname === '/signin'
+            ? 'form__button-submit_type_signin'
+            : ''
+        }`}
         disabled={isFormValid ? false : true}
       >
         {buttonText}

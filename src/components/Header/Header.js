@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 
 import './Header.css';
 
@@ -15,24 +15,31 @@ function Header() {
   const location = useLocation();
 
   return (
-    <header className={`header ${(location.pathname === '/' && !loggedIn) && 'header_blue'}`}>
-      <div className="header__block">
-        {loggedIn && <Burger
-          loggedIn={loggedIn}
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
-        />}
+    <header
+      className={`header ${
+        location.pathname === '/' && !loggedIn ? 'header_color_blue' : ''
+      }`}
+    >
+      <div className="header__container">
+        {loggedIn && (
+          <Burger
+            loggedIn={loggedIn}
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+          />
+        )}
         <Logo />
         {loggedIn ? (
           <>
-            <Navigation isMenuOpened={isMenuOpen} /> <AccountLink isMenuOpened={isMenuOpen}/>
+            <Navigation isMenuOpened={isMenuOpen} />{' '}
+            <AccountLink isMenuOpened={isMenuOpen} />
           </>
         ) : (
           <nav className="header__menu">
             <Link to="/signup" className="header__link">
               Регистрация
             </Link>
-            <Link to="/signin" className="header__link header__link_login">
+            <Link to="/signin" className="header__link header__link_type_login">
               Войти
             </Link>
           </nav>

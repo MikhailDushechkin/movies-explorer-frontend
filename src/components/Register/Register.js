@@ -38,7 +38,7 @@ function Register() {
           />
           <span
             className={`form__input-error ${
-              errors.name ? 'form__input-error_active' : ''
+              errors.name ? 'form__input-error_type_active' : ''
             }`}
           >
             {errors.name || ''}
@@ -61,7 +61,7 @@ function Register() {
           />
           <span
             className={`form__input-error ${
-              errors.email ? 'form__input-error_active' : ''
+              errors.email ? 'form__input-error_type_active' : ''
             }`}
           >
             {errors.email || ''}
@@ -86,7 +86,7 @@ function Register() {
           />
           <span
             className={`form__input-error ${
-              errors.password ? 'form__input-error_active' : ''
+              errors.password ? 'form__input-error_type_active' : ''
             }`}
           >
             {errors.password || ''}

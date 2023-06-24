@@ -6,11 +6,11 @@
   z-index: 5;
 }
 
-.header_blue {
+.header_color_blue {
   background: #465DFF;
 }
 
-.header__block {
+.header__container {
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
@@ -39,7 +39,7 @@
   margin: 0;
 }
 
-.header__link_login {
+.header__link_type_login {
   padding: 8px 20px;
   box-sizing: border-box;
   color: #000000;
@@ -48,13 +48,13 @@
 }
 
 @media screen and (max-width: 768px) {
-  .header__block {
+  .header__container {
     padding: 18px 30px;
   }
 }
 
 @media screen and (max-width: 520px) {
-  .header__block {
+  .header__container {
     padding: 18px 14px;
   }
 }

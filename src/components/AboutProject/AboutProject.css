@@ -52,7 +52,7 @@
   width: 100%;
 }
 
-.about-project__stage_first {
+.about-project__stage_stage_first {
   width: 20%;
 }
 
@@ -67,15 +67,15 @@
   margin: 0;
 }
 
-.about-project__stage-text_green {
+.about-project__stage-text_color_green {
   background-color: #2be080;
 }
 
-.about-project__stage_second {
+.about-project__stage_stage_second {
   width: 80%;
 }
 
-.about-project__stage-text_gray {
+.about-project__stage-text_color_grey {
   background-color: #f2f2f2;
 }
 
@@ -145,11 +145,11 @@
     margin: 60px 0 0 0;
   }
 
-  .about-project__stage_first {
+  .about-project__stage_stage_first {
     width: 35%;
   }
 
-  .about-project__stage_second {
+  .about-project__stage_stage_second {
     width: 65%;
   }
 

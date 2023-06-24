@@ -25,6 +25,7 @@
   margin: 66px 0 0 0;
   display: flex;
   justify-content: space-between;
+  gap: 49px;
 }
 
 .about-me__bio {
@@ -68,6 +69,7 @@
   color: #000000;
   margin: auto 0 0 0;
   transition: opacity 0.3s ease;
+  padding: 5px 0 0 0;
 }
 
 .about-me__social:hover {
@@ -89,10 +91,6 @@
 
   .about-me__container {
     padding: 0 50px;
-  }
-
-  .about-me__info-wrapper {
-    gap: 49px;
   }
 
   .about-me__name {
@@ -121,6 +119,20 @@
   }
 }
 
+@media screen and (max-width: 670px) {
+  .about-me__info-wrapper {
+    flex-direction: column-reverse;
+    margin: 60px 0 0 0;
+    gap: 40px;
+  }
+
+  .about-me__photo {
+    align-self: center;
+    width: 292px;
+    height: 352px;
+  }
+}
+
 @media screen and (max-width: 560px) {
   .about-me {
     padding: 70px 0 70px 0;
@@ -134,12 +146,6 @@
     font-size: 18px;
     line-height: 22px;
     margin: 0 0 28px 0;
-  }
-
-  .about-me__info-wrapper {
-    flex-direction: column-reverse;
-    margin: 60px 0 0 0;
-    gap: 40px;
   }
 
   .about-me__name {
@@ -160,11 +166,5 @@
 
   .about-me__social {
     margin: 40px 0 0 0;
-  }
-
-  .about-me__photo {
-    align-self: center;
-    width: 292px;
-    height: 352px;
   }
 }

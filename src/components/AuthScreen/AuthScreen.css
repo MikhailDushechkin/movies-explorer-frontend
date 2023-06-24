@@ -1,14 +1,28 @@
 .auth-screen {
   max-width: 396px;
   margin: 0 auto;
-  padding: 70px 0 0 0;
+  padding: 70px 0;
   box-sizing: border-box;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auth-screen__title-container {
+  align-self: flex-start;
+}
+
+.auth-screen__title {
+  font-family: "Inter", "Arial", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+  margin: 40px 0;
 }
 
 .auth-screen__text {
-  margin-top: 16px;
-  margin-bottom: 0;
+  margin: 16px 0 0 0;
   font-family: 'Inter', 'Arial', sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -28,15 +42,23 @@
 
 @media screen and (max-width: 768px) {
   .auth-screen {
-    padding: 232px 0 0 0;
+    padding: 232px 0;
   }
 }
 
 @media screen and (max-width: 520px) {
   .auth-screen {
-    padding-top: 56px;
-    padding-bottom: 30px;
+    padding: 56px 0 30px 0;
     max-width: 260px;
+  }
+
+  .auth-screen__title-container {
+    align-self: center;
+  }
+
+  .auth-screen__title {
+    text-align: center;
+    margin: 50px 0 80px 0;
   }
 
   .auth-screen__text {

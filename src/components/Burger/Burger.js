@@ -5,8 +5,8 @@ function Burger({ loggedIn, isMenuOpen, setIsMenuOpen }) {
 
   return (
     <button
-      className={`burger ${!loggedIn ? 'burger_invisible' : ''} ${
-        isMenuOpen ? 'burger_close' : ''
+      className={`burger ${!loggedIn ? 'burger_type_invisible' : ''} ${
+        isMenuOpen ? 'burger_type_close' : ''
       }`}
       type="button"
       onClick={handleBurgerClick}

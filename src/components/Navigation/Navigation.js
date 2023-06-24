@@ -8,10 +8,10 @@ function Navigation({ isMenuOpened, onClose }) {
   const location = useLocation();
 
   return (
-    <nav className={`navigation ${isMenuOpened && 'navigation_opened'}`}>
+    <nav className={`navigation ${isMenuOpened && 'navigation_type_opened'}`}>
       <ul className={`navigation__menu-wrapper`}>
         <li
-          className={`navigation__menu-item  navigation__menu-item_hidden
+          className={`navigation__menu-item  navigation__menu-item_type_hidden
           `}
         >
           <Link

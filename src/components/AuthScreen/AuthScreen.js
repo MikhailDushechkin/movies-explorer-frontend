@@ -15,8 +15,10 @@ function AuthScreen({
 }) {
   return (
     <section className="auth-screen">
-      <Logo activePlace="auth" />
-      <h1 className="form__title">{title}</h1>
+      <div className="auth-screen__title-container">
+        <Logo activePlace="auth" />
+        <h1 className="auth-screen__title">{title}</h1>
+      </div>
       <Form
         name={name}
         onSubmit={onSubmit}
