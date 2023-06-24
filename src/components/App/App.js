@@ -2,17 +2,17 @@ import { Routes, Route } from 'react-router-dom';
 
 import './App.css';
 
-import Header from './components/Header/Header';
-import Register from './components/Register/Register';
-import Login from './components/Login/Login';
-import Main from './components/Main/Main';
-import Movies from './components/Movies/Movies';
-import SavedMovies from './components/SavedMovies/SavedMovies';
-import Footer from './components/Footer/Footer';
-import Profile from './components/Profile/Profile';
-import NotFound from './components/NotFound/NotFound';
+import Header from '../Header/Header';
+import Register from '../Register/Register';
+import Login from '../Login/Login';
+import Main from '../Main/Main';
+import Movies from '../Movies/Movies';
+import SavedMovies from '../SavedMovies/SavedMovies';
+import Footer from '../Footer/Footer';
+import Profile from '../Profile/Profile';
+import NotFound from '../NotFound/NotFound';
 
-import userData from './utils/userData.json';
+import userData from '../../utils/userData.json';
 
 function App() {
   return (

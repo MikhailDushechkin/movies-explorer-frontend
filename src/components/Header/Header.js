@@ -9,7 +9,7 @@ import AccountLink from '../AccountLink/AccountLink';
 import Burger from '../Burger/Burger';
 
 function Header() {
-  const [loggedIn, setIsLoggedIn] = React.useState(false);
+  const [loggedIn, setIsLoggedIn] = React.useState(true);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const location = useLocation();
@@ -21,6 +21,7 @@ function Header() {
       }`}
     >
       <div className="header__container">
+        <Logo />
         {loggedIn && (
           <Burger
             loggedIn={loggedIn}
@@ -28,11 +29,10 @@ function Header() {
             setIsMenuOpen={setIsMenuOpen}
           />
         )}
-        <Logo />
         {loggedIn ? (
           <>
             <Navigation isMenuOpened={isMenuOpen} />{' '}
-            <AccountLink isMenuOpened={isMenuOpen} />
+            <AccountLink isMenuOpened={!isMenuOpen} />
           </>
         ) : (
           <nav className="header__menu">

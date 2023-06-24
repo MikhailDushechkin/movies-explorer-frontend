@@ -138,5 +138,7 @@
 
   .techs__list {
     margin: 50px 0 0 0;
+    max-width: 178px;
+    justify-content: flex-start;
   }
 }
