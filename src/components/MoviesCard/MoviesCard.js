@@ -24,7 +24,7 @@ function MoviesCard({ movie }) {
   return (
     <li className="card">
       <div className="card__header-block">
-        <p className="card__title">{nameRU}</p>
+        <h3 className="card__title">{nameRU}</h3>
         <p className="card__duration">{handleConvertDuration(duration)}</p>
       </div>
       <a

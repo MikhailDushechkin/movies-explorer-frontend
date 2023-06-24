@@ -1,6 +1,7 @@
 .profile {
   max-width: 100%;
   padding: 74px 0 0 0;
+  height: calc(100vh - 74px);
 }
 
 .profile__wrapper {
@@ -8,6 +9,7 @@
   margin: 0 auto;
   padding: 74px 0 0 0;
   box-sizing: border-box;
+  height: calc(100vh - 74px);
 }
 
 .profile__title {
@@ -25,7 +27,7 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin: 98px 0 0 0;
+  margin: 114px 0 0 0;
 }
 
 .profile__actions-wrapper_hidden {
@@ -44,6 +46,11 @@
   line-height: 1.23;
   transition: opacity 0.3s ease;
   background-color: #ffffff;
+  transition: opacity 0.3s ease;
+}
+
+.profile__button-action:hover {
+  opacity: 0.7;
 }
 
 .profile__button-action_exit {
@@ -69,7 +76,10 @@
     padding: 70px 30px 0 30px;
     box-sizing: border-box;
     max-width: 320px;
+  }
 
+  .profile__title {
+    margin: 0 0 80px 0;
   }
 
   .profile__actions-wrapper {

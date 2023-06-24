@@ -1,7 +1,7 @@
-import './Register.css'
+import './Register.css';
 
-import AuthScreen from "../AuthScreen/AuthScreen";
-import useValidation from "../../hooks/useValidation";
+import AuthScreen from '../AuthScreen/AuthScreen';
+import useValidation from '../../hooks/useValidation';
 
 function Register() {
   const { values, errors, isFormValid, onChange } = useValidation();
@@ -23,7 +23,7 @@ function Register() {
           Имя
           <input
             className={`form__input ${
-              errors.name ? "form__input_style_error" : ""
+              errors.name ? 'form__input_style_error' : ''
             }`}
             type="text"
             name="name"
@@ -32,44 +32,46 @@ function Register() {
             minLength="2"
             maxLength="30"
             id="name-input"
+            placeholder="Миша"
             onChange={onChange}
-            value={values.name || ""}
+            value={values.name || ''}
           />
           <span
             className={`form__input-error ${
-              errors.name ? "form__input-error_active" : ""
+              errors.name ? 'form__input-error_active' : ''
             }`}
           >
-            {errors.name || ""}
+            {errors.name || ''}
           </span>
         </label>
         <label className="form__input-container">
           E-mail
           <input
             className={`form__input ${
-              errors.email ? "form__input_style_error" : ""
+              errors.email ? 'form__input_style_error' : ''
             }`}
             type="email"
             name="email"
             form="register"
             required
             id="email-input"
+            placeholder="misha@yandex.ru"
             onChange={onChange}
-            value={values.email || ""}
+            value={values.email || ''}
           />
           <span
             className={`form__input-error ${
-              errors.email ? "form__input-error_active" : ""
+              errors.email ? 'form__input-error_active' : ''
             }`}
           >
-            {errors.email || ""}
+            {errors.email || ''}
           </span>
         </label>
         <label className="form__input-container">
           Пароль
           <input
             className={`form__input ${
-              errors.password ? "form__input_style_error" : ""
+              errors.password ? 'form__input_style_error' : ''
             }`}
             type="password"
             name="password"
@@ -78,15 +80,16 @@ function Register() {
             minLength="6"
             maxLength="30"
             id="password-input"
+            placeholder="******"
             onChange={onChange}
-            value={values.password || ""}
+            value={values.password || ''}
           />
           <span
             className={`form__input-error ${
-              errors.password ? "form__input-error_active" : ""
+              errors.password ? 'form__input-error_active' : ''
             }`}
           >
-            {errors.password || ""}
+            {errors.password || ''}
           </span>
         </label>
       </AuthScreen>

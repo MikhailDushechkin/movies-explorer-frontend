@@ -29,6 +29,7 @@ function Login() {
             form="login"
             required
             id="email-input"
+            placeholder="misha@yandex.ru"
             onChange={onChange}
             value={values.email || ""}
           />
@@ -53,6 +54,7 @@ function Login() {
             minLength="6"
             maxLength="30"
             id="password-input"
+            placeholder="******"
             onChange={onChange}
             value={values.password || ""}
           />
