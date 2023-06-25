@@ -35,12 +35,18 @@
   transition: all 0.3s ease-out;
 }
 
+.burger_type_close {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+}
+
 .burger_type_close .burger__line {
   background-color: transparent;
 }
 
 .burger_type_close .burger__line::before {
-  width: 26px;
+  width: 22px;
   transform: rotate(45deg);
   top: 0;
 }
@@ -57,7 +63,6 @@
 
 @media screen and (max-width: 768px) {
   .burger {
-    display: block;
     width: 38px;
     height: 38px;
     display: flex;
@@ -68,5 +73,12 @@
     cursor: pointer;
     transition: all 0.3s ease-out;
     z-index: 10;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .burger_type_close {
+    top: 6px;
+    right: 8px;
   }
 }

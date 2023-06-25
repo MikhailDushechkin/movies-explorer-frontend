@@ -19,6 +19,7 @@
   margin: 5px 0 0 0;
   font-size: 16px;
   line-height: 19px;
+  font-family: "Inter", "Arial", sans-serif;
 }
 
 .not-found__link {
@@ -29,6 +30,7 @@
   color: #FF6838;
   transition: opacity .3s linear;
   margin: 184px 0 0 0;
+  font-family: "Inter", "Arial", sans-serif;
 }
 
 .not-found__link:hover {

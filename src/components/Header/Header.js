@@ -9,7 +9,7 @@ import AccountLink from '../AccountLink/AccountLink';
 import Burger from '../Burger/Burger';
 
 function Header() {
-  const [loggedIn, setIsLoggedIn] = React.useState(true);
+  const [loggedIn, setIsLoggedIn] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const location = useLocation();

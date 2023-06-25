@@ -67,7 +67,7 @@
   text-align: center;
   letter-spacing: -0.04em;
   width: 90px;
-  height: 60px;
+  min-height: 60px;
   background: #e8e8e8;
   border-radius: 10px;
   display: flex;
@@ -100,7 +100,7 @@
 
   .techs__item {
     width: 84px;
-    height: 57px;
+    min-height: 57px;
     font-size: 12px;
     line-height: 15px;
   }
