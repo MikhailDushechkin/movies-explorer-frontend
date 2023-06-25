@@ -1,0 +1,138 @@
+.navigation__menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 212px;
+  padding-left: 62px;
+}
+
+.navigation__menu-item {
+  margin-right: 16px;
+}
+
+.navigation__menu-item:last-child {
+  margin: 0;
+}
+
+.navigation__menu-item_type_hidden {
+  display: none;
+}
+
+.navigation__link {
+  font-family: "Inter", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  color: #000000;
+  text-decoration: none;
+  transition: opacity 0.3s linear;
+}
+
+.navigation__link:hover {
+  opacity: 0.7;
+}
+
+.navigation__link_side-menu {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.navigation__link_header-active {
+  font-weight: 500;
+}
+
+.navigation__link_side-menu-active {
+  border-bottom: 2px solid;
+}
+
+@media screen and (max-width: 768px) {
+  .navigation {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    transition: all 0.5s linear;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .navigation_type_opened {
+    pointer-events: all;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .navigation__menu-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 520px;
+    height: 100vh;
+    padding: 159px 22px 46px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transition: all 0.5s linear;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    z-index: 5;
+  }
+
+  .navigation__menu-item {
+    position: relative;
+    z-index: 10;
+    margin: 0 0 28px 0;
+  }
+
+  .navigation__menu-item:nth-child(3) {
+    margin: 0;
+  }
+
+  .navigation__menu-account-link {
+    position: absolute;
+    bottom: 90px;
+  }
+
+  .navigation__menu-item_type_hidden {
+    display: block;
+  }
+
+  .navigation__link {
+    margin: 0;
+    padding-bottom: 7px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+    text-decoration: none;
+    transition: opacity 0.3s linear;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .navigation__menu-wrapper {
+    padding: 144px 13px 46px;
+  }
+
+  .navigation__link_side-menu {
+    padding-bottom: 7px;
+  }
+
+  .navigation__menu-item {
+    margin: 0 0 24px 0;
+  }
+
+  .navigation__menu-item:last-child {
+    bottom: 46px;
+  }
+}

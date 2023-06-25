@@ -1,0 +1,35 @@
+.account-link {
+  padding: 6px 10px;
+  border: 2px solid rgba(170, 170, 170, 0.2);
+  border-radius: 50px;
+  font-family: "Inter", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  text-decoration: none;
+  transition: opacity .3s linear;
+}
+
+.account-link:hover {
+  opacity: 0.7;
+}
+
+.account-link__profile-icon {
+  width: 12px;
+  height: 14px;
+  margin-right: 7px;
+}
+
+.account-link_burger-menu {
+  margin-top: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .account-link_hidden {
+    display: none;
+  }
+}
+
