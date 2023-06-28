@@ -1,15 +1,18 @@
-import AuthScreen from "../AuthScreen/AuthScreen";
-import useValidation from "../../hooks/useValidation";
-import "./Login.css";
+import { Navigate } from 'react-router-dom';
 
-function Login() {
+import AuthScreen from '../AuthScreen/AuthScreen';
+import useValidation from '../../hooks/useValidation';
+import './Login.css';
+
+function Login({ handleLogin, loggedIn, isLoading }) {
   const { values, errors, isFormValid, onChange } = useValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
+    handleLogin(values.email, values.password);
   }
 
-  return (
+  return !loggedIn ? (
     <main className="login">
       <AuthScreen
         title="Рады видеть!"
@@ -22,7 +25,7 @@ function Login() {
           E-mail
           <input
             className={`form__input ${
-              errors.email ? "form__input_style_error" : ""
+              errors.email ? 'form__input_style_error' : ''
             }`}
             type="email"
             name="email"
@@ -31,21 +34,22 @@ function Login() {
             id="email-input"
             placeholder="misha@yandex.ru"
             onChange={onChange}
-            value={values.email || ""}
+            disabled={isLoading ? true : false}
+            value={values.email || ''}
           />
           <span
             className={`form__input-error ${
-              errors.email ? "form__input-error_type_active" : ""
+              errors.email ? 'form__input-error_type_active' : ''
             }`}
           >
-            {errors.email || ""}
+            {errors.email || ''}
           </span>
         </label>
         <label className="form__input-container">
           Пароль
           <input
             className={`form__input ${
-              errors.password ? "form__input_style_error" : ""
+              errors.password ? 'form__input_style_error' : ''
             }`}
             type="password"
             name="password"
@@ -56,18 +60,21 @@ function Login() {
             id="password-input"
             placeholder="******"
             onChange={onChange}
-            value={values.password || ""}
+            disabled={isLoading ? true : false}
+            value={values.password || ''}
           />
           <span
             className={`form__input-error ${
-              errors.password ? "form__input-error_type_active" : ""
+              errors.password ? 'form__input-error_type_active' : ''
             }`}
           >
-            {errors.password || ""}
+            {errors.password || ''}
           </span>
         </label>
       </AuthScreen>
     </main>
+  ) : (
+    <Navigate to="/" replace />
   );
 }
 

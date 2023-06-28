@@ -8,10 +8,7 @@ import Navigation from '../Navigation/Navigation';
 import AccountLink from '../AccountLink/AccountLink';
 import Burger from '../Burger/Burger';
 
-function Header() {
-  const [loggedIn, setIsLoggedIn] = React.useState(false);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+function Header({ loggedIn, isMenuOpen, setIsMenuOpen }) {
   const location = useLocation();
 
   return (
@@ -31,7 +28,7 @@ function Header() {
         )}
         {loggedIn ? (
           <>
-            <Navigation isMenuOpened={isMenuOpen} />{' '}
+            <Navigation isMenuOpened={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />{' '}
             <AccountLink isMenuOpened={!isMenuOpen} />
           </>
         ) : (

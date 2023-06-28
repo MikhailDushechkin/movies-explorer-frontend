@@ -4,7 +4,7 @@ import './Navigation.css';
 
 import AccountLink from '../AccountLink/AccountLink';
 
-function Navigation({ isMenuOpened, onClose }) {
+function Navigation({ isMenuOpened, setIsMenuOpen }) {
   const location = useLocation();
 
   return (
@@ -16,7 +16,7 @@ function Navigation({ isMenuOpened, onClose }) {
         >
           <Link
             to="/"
-            onClick={onClose}
+            onClick={()=>{setIsMenuOpen(false)}}
             className={`navigation__link ${
               location.pathname === '/'
                 ? 'navigation__link_side-menu-active'
@@ -29,7 +29,7 @@ function Navigation({ isMenuOpened, onClose }) {
         <li className="navigation__menu-item">
           <Link
             to="/movies"
-            onClick={onClose}
+            onClick={()=>{setIsMenuOpen(false)}}
             className={`navigation__link ${
               location.pathname === '/movies'
                 ? 'navigation__link_header-active'
@@ -46,7 +46,7 @@ function Navigation({ isMenuOpened, onClose }) {
         <li className="navigation__menu-item">
           <Link
             to="/saved-movies"
-            onClick={onClose}
+            onClick={()=>{setIsMenuOpen(false)}}
             className={`navigation__link ${
               location.pathname === '/saved-movies'
                 ? 'navigation__link_header-active'

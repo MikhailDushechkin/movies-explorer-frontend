@@ -1,11 +1,15 @@
 import React from 'react';
+
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 import useValidation from '../../hooks/useValidation';
 
 import './Profile.css';
 
 import Form from '../Form/Form';
 
-function Profile({ user }) {
+function Profile({ isLogout, isLoading, onUpdateUser }) {
+  const currentUser = React.useContext(CurrentUserContext);
+
   const [isEditing, setEditingStatus] = React.useState(false);
   const { values, errors, isFormValid, onChange, resetValidation } =
     useValidation();
@@ -18,18 +22,14 @@ function Profile({ user }) {
     e.preventDefault();
   };
 
-  React.useEffect(() => {
-    resetValidation(true, user);
-  }, [resetValidation, user]);
+  // React.useEffect(() => {
+  //   resetValidation(true);
+  // }, [resetValidation]);
 
   return (
     <main className="profile">
       <section className="profile__wrapper">
-        <h1
-          className='profile__title'
-        >
-          {`Привет, ${user.name}`}!
-        </h1>
+        <h1 className="profile__title">{`Привет,`}!</h1>
         <Form
           name="edit-profile"
           buttonText="Сохранить"
@@ -73,7 +73,9 @@ function Profile({ user }) {
           </label>
           <div
             className={`form__errors-wrapper ${
-              errors.name || errors.email ? 'form__errors-wrapper_type_active' : ''
+              errors.name || errors.email
+                ? 'form__errors-wrapper_type_active'
+                : ''
             }`}
           >
             <div className="form__error-wrapper">
