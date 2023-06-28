@@ -1,5 +1,7 @@
 import React from 'react';
 
+import MainApi from '../../utils/MainApi';
+
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import useValidation from '../../hooks/useValidation';
 
@@ -7,35 +9,61 @@ import './Profile.css';
 
 import Form from '../Form/Form';
 
-function Profile({ isLogout, isLoading, onUpdateUser }) {
+function Profile({ isLogout, setIsLoading }) {
   const currentUser = React.useContext(CurrentUserContext);
+  const [userData, setUserData] = React.useState(currentUser);
+  const nameInputRef = React.useRef(false);
 
-  const [isEditing, setEditingStatus] = React.useState(false);
+  const [isEdit, setEditStatus] = React.useState(false);
   const { values, errors, isFormValid, onChange, resetValidation } =
     useValidation();
 
-  const handleEditClick = () => {
-    setEditingStatus(!isEditing);
-  };
+  // const initialValues = {
+  //   username: userData.name,
+  //   email: userData.email,
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  async function handleEditClick(evt) {
+    evt.preventDefault();
+    await setEditStatus(!isEdit);
+    nameInputRef.current.focus();
+  }
 
-  // React.useEffect(() => {
-  //   resetValidation(true);
-  // }, [resetValidation]);
+  async function handleSubmit(evt) {
+    evt.preventDefault();
+    setIsLoading(true);
+    setUserData({
+      name: values.username,
+      email: values.email,
+    });
+
+    MainApi.changeUserInfo({
+      name: values.name,
+      email: values.email,
+    })
+      .then((data) => {
+        setEditStatus(false);
+      })
+      .catch(async (err) => {
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  React.useEffect(() => {
+    resetValidation(false, currentUser);
+  }, [resetValidation, currentUser]);
 
   return (
     <main className="profile">
       <section className="profile__wrapper">
-        <h1 className="profile__title">{`Привет,`}!</h1>
+        <h1 className="profile__title">{`Привет, ${userData.name}`}!</h1>
         <Form
           name="edit-profile"
           buttonText="Сохранить"
           onSubmit={handleSubmit}
           isFormValid={isFormValid}
-          isEditing={isEditing}
+          isEditing={isEdit}
         >
           <label className="form__input-container form__input-container_type_edit-profile">
             Имя
@@ -50,7 +78,8 @@ function Profile({ isLogout, isLoading, onUpdateUser }) {
               required
               minLength="2"
               maxLength="30"
-              disabled={isEditing ? false : true}
+              disabled={isEdit ? false : true}
+              ref={nameInputRef}
               onChange={onChange}
               value={values.name || ''}
             />
@@ -66,7 +95,7 @@ function Profile({ isLogout, isLoading, onUpdateUser }) {
               name="email"
               form="edit-profile"
               required
-              disabled={isEditing ? false : true}
+              disabled={isEdit ? false : true}
               onChange={onChange}
               value={values.email || ''}
             />
@@ -114,7 +143,7 @@ function Profile({ isLogout, isLoading, onUpdateUser }) {
         </Form>
         <div
           className={`profile__actions-wrapper ${
-            isEditing ? 'profile__actions-wrapper_type_hidden' : ''
+            isEdit ? 'profile__actions-wrapper_type_hidden' : ''
           }`}
         >
           <button
@@ -125,6 +154,7 @@ function Profile({ isLogout, isLoading, onUpdateUser }) {
             Редактировать
           </button>
           <button
+            onClick={isLogout}
             className="profile__button-action profile__button-action_type_exit"
             type="button"
           >

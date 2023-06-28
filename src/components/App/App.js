@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import './App.css';
 
@@ -74,6 +75,7 @@ function App() {
       });
   };
 
+  // функция выхода и очистки
   const signOut = () => {
     localStorage.clear();
     setLoggedIn(false);
@@ -108,13 +110,13 @@ function App() {
     if (loggedIn) {
       MainApi.setToken();
       Promise.all([MainApi.getUserInfo(), MainApi.getSavedMovies()])
-        .then(([me, apiSavedMovies]) => {
-          setCurrentUser(me);
+        .then(([user, apiSavedMovies]) => {
+          setCurrentUser(user);
           setSavedMovies(
-            apiSavedMovies.filter((film) => film.owner === me._id)
+            apiSavedMovies.filter((film) => film.owner === user._id)
           );
         })
-        .catch(async (err) => {
+        .catch((err) => {
           setIsSuccess(false);
           setInfoTooltipPopupOpen(true);
         })
@@ -188,10 +190,17 @@ function App() {
           exact
           path="/profile"
           element={
-            <>
-              <Header />
-              <Profile />
-            </>
+            <ProtectedRoute
+              element={
+                <>
+                  <Header />
+                  <Profile />
+                </>
+              }
+              loggedIn={loggedIn}
+              isLogout={signOut}
+              setIsLoading={setIsLoading}
+            />
           }
         />
         <Route path="*" element={<NotFound />} />
