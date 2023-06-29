@@ -35,18 +35,9 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  checkToken(token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    }).then(this._checkResponse);
-  }
-
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
+      method: 'GET',
       headers: this._headers,
       credentials: 'include',
     }).then(this._checkResponse);
@@ -63,6 +54,7 @@ class MainApi {
 
   getSavedMovies() {
     return fetch(`${this._baseUrl}/movies`, {
+      method: 'GET',
       headers: this._headers,
       credentials: 'include',
     }).then(this._checkResponse);

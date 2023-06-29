@@ -37,8 +37,8 @@ function App() {
     setIsLoading(true);
     setInfoPopupOpen(true);
     try {
-      const userData = await MainApi.register(name, email, password);
-      if (userData) {
+      const user = await MainApi.register(name, email, password);
+      if (user) {
         handleLogin(email, password);
         setIsSuccess(true);
         setTimeout(() => setInfoPopupOpen(false), 1000);
@@ -55,8 +55,8 @@ function App() {
     setIsLoading(true);
     setInfoPopupOpen(true);
     try {
-      const userData = await MainApi.login(email, password);
-      if (userData) {
+      const user = await MainApi.login(email, password);
+      if (user) {
         setLoggedIn(true);
         setIsSuccess(true);
         setTimeout(() => setInfoPopupOpen(false), 1000);
@@ -69,21 +69,16 @@ function App() {
     }
   }
 
-  const handleLoginCheck = React.useCallback(async () => {
-    try {
-      const userData = await MainApi.getUserInfo();
-      if (userData) {
-        setLoggedIn(true);
-        setCurrentUser(userData);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
   React.useEffect(() => {
-    handleLoginCheck();
-  }, [loggedIn, handleLoginCheck]);
+    if (loggedIn) {
+      MainApi.getUserInfo()
+        .then((data) => {
+          setCurrentUser(data);
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {});
+    }
+  }, [loggedIn]);
 
   // функция выхода и очистки
   const signOut = () => {
@@ -183,7 +178,11 @@ function App() {
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
               />
-              <Profile isLogout={signOut} setIsLoading={setIsLoading} />
+              <Profile
+                isLogout={signOut}
+                setIsLoading={setIsLoading}
+                isLoading={isLoading}
+              />
             </ProtectedRoute>
           }
         />
