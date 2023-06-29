@@ -25,7 +25,9 @@ function useValidation() {
   return {
     values,
     errors,
+    setValues,
     isFormValid,
+    setFormValid,
     onChange,
     resetValidation,
   };

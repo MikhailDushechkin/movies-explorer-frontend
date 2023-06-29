@@ -1,19 +1,39 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import useValidation from '../../hooks/useValidation';
+
+import { SearchMessage } from '../../utils/constants';
 
 import './SearchForm.css';
 
-function SearchForm({ handleSubmitSearch }) {
-  const [keyWord, setKeyWord] = React.useState('');
-  const [isShort, setIsShot] = React.useState(false);
+function SearchForm({
+  handleSubmitSearch,
+  handleChangeCheckbox,
+  showError,
+  isLoading,
+}) {
+  const { pathname } = useLocation();
 
-  const handleInputKeyWord = (evt) => setKeyWord(evt.target.value);
+  const { values, setValues, onChange, isFormValid, setFormValid } = useValidation();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    handleSubmitSearch(keyWord);
+    isFormValid
+      ? handleSubmitSearch(values.keyWord)
+      : showError(SearchMessage.EMPTY);
   };
+
+  React.useEffect(() => {
+    if (pathname === '/movies') {
+      const storageKeyWord = localStorage.getItem('storageKeyWord');
+      storageKeyWord && setValues({ keyWord: storageKeyWord });
+      setFormValid(true);
+    } else {
+      setValues({ keyWord: '' });
+    }
+  }, [pathname]);
 
   return (
     <section className="search-form">
@@ -27,21 +47,24 @@ function SearchForm({ handleSubmitSearch }) {
           onSubmit={handleSubmit}
         >
           <input
-            value={keyWord}
+            value={values.keyWord || ''}
             className="search-form__input"
             type="text"
-            name="search"
+            name="keyWord"
+            id='keyWord'
             placeholder="Фильм"
             required
-            onChange={handleInputKeyWord}
+            onChange={onChange}
+            disabled={isLoading}
           />
           <button
             className="search-form__submit-button"
             type="submit"
             aria-label="Поиск"
+            disabled={isLoading}
           />
         </form>
-        <FilterCheckbox isShort={isShort} setIsShot={setIsShot} />
+        <FilterCheckbox handleCheckbox={handleChangeCheckbox} />
       </div>
     </section>
   );

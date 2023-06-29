@@ -12,7 +12,7 @@ function Register({ handleRegister, isLoading, loggedIn }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleRegister(values.username, values.email, values.password);
+    handleRegister(values.name, values.email, values.password);
   }
 
   return !loggedIn ? (

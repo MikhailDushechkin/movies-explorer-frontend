@@ -14,7 +14,6 @@ function Form({
 
   return (
     <form
-      action="#"
       name={`${name}`}
       id={`${name}`}
       className={`form form_${name}`}

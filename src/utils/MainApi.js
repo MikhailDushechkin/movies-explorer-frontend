@@ -10,7 +10,7 @@ class MainApi {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(res);
+    return Promise.reject(`${res.status} - ${res.statusText}`);
   }
 
   register(name, email, password) {
@@ -19,6 +19,7 @@ class MainApi {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ name, email, password }),
     }).then(this._checkResponse);
   }
@@ -29,23 +30,25 @@ class MainApi {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ email, password }),
     }).then(this._checkResponse);
   }
 
-  checkToken(jwt) {
+  checkToken(token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
       },
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -53,6 +56,7 @@ class MainApi {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify(data),
     }).then(this._checkResponse);
   }
@@ -60,6 +64,7 @@ class MainApi {
   getSavedMovies() {
     return fetch(`${this._baseUrl}/movies`, {
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -67,6 +72,7 @@ class MainApi {
     return fetch(`${this._baseUrl}/movies`, {
       method: 'POST',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify(movie),
     }).then(this._checkResponse);
   }
@@ -75,11 +81,8 @@ class MainApi {
     return fetch(`${this._baseUrl}/movies/${movieId}`, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
-  }
-
-  setToken() {
-    this._headers.authorization = `Bearer ${localStorage.getItem('jwt')}`;
   }
 }
 

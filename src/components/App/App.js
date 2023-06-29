@@ -27,53 +27,63 @@ function App() {
   const [savedMovies, setSavedMovies] = React.useState([]);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] =
-    React.useState(false);
+  const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const navigate = useNavigate();
 
-  // функция для регистрации
-  const handleRegister = (name, email, password) => {
+  async function handleRegister(name, email, password) {
     setIsLoading(true);
-    MainApi.register(name, email, password)
-      .then(() => {
+    setInfoPopupOpen(true);
+    try {
+      const userData = await MainApi.register(name, email, password);
+      if (userData) {
         handleLogin(email, password);
-        setInfoTooltipPopupOpen(true);
         setIsSuccess(true);
-      })
-      .then((res) => navigate('/signin', { replace: true }))
-      .catch((err) => {
-        console.log(err);
-        setInfoTooltipPopupOpen(true);
-        setIsSuccess(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+        setTimeout(() => setInfoPopupOpen(false), 1000);
+        setTimeout(() => navigate('/signin', { replace: true }), 1500);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-  // функция для логина
-  const handleLogin = (email, password) => {
+  async function handleLogin(email, password) {
     setIsLoading(true);
-    MainApi.login(email, password)
-      .then((res) => {
-        localStorage.setItem('jwt', res.token);
+    setInfoPopupOpen(true);
+    try {
+      const userData = await MainApi.login(email, password);
+      if (userData) {
         setLoggedIn(true);
-        setInfoTooltipPopupOpen(true);
         setIsSuccess(true);
-      })
-      .then((res) => navigate('/movies', { replace: true }))
-      .catch((err) => {
-        console.error(err);
-        setInfoTooltipPopupOpen(true);
-        setIsSuccess(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+        setTimeout(() => setInfoPopupOpen(false), 1000);
+        setTimeout(() => navigate('/movies', { replace: true }), 1500);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleLoginCheck = React.useCallback(async () => {
+    try {
+      const userData = await MainApi.getUserInfo();
+      if (userData) {
+        setLoggedIn(true);
+        setCurrentUser(userData);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    handleLoginCheck();
+  }, [loggedIn, handleLoginCheck]);
 
   // функция выхода и очистки
   const signOut = () => {
@@ -86,53 +96,22 @@ function App() {
     navigate('/', { replace: true });
   };
 
-  React.useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      MainApi.checkToken(jwt)
-        .then((res) => {
-          setCurrentUser(res);
-          setLoggedIn(true);
-        })
-        .catch((err) => {
-          console.log(err);
-          signOut();
-        });
-    } else setLoggedIn(false);
-  }, [navigate]);
-
   const closeAllPopups = () => {
-    setInfoTooltipPopupOpen(false);
+    setInfoPopupOpen(false);
     setIsMenuOpen(false);
   };
 
-  React.useEffect(() => {
-    if (loggedIn) {
-      MainApi.setToken();
-      Promise.all([MainApi.getUserInfo(), MainApi.getSavedMovies()])
-        .then(([user, apiSavedMovies]) => {
-          setCurrentUser(user);
-          setSavedMovies(
-            apiSavedMovies.filter((film) => film.owner === user._id)
-          );
-        })
-        .catch((err) => {
-          setIsSuccess(false);
-          setInfoTooltipPopupOpen(true);
-        })
-        .finally(() => {});
-    }
-  }, [loggedIn]);
-
   return (
-    <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+    <CurrentUserContext.Provider
+      value={{ currentUser, setCurrentUser, savedMovies, setSavedMovies }}
+    >
       <Routes>
         <Route
           exact
           path="/signup"
           element={
             loggedIn ? (
-              <Navigate to="/movies" />
+              <Navigate to="/signin" />
             ) : (
               <Register handleRegister={handleRegister} isLoading={isLoading} />
             )
@@ -168,45 +147,50 @@ function App() {
           exact
           path="/movies"
           element={
-            <>
-              <Header />
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Header
+                loggedIn={loggedIn}
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+              />
               <Movies />
               <Footer />
-            </>
+            </ProtectedRoute>
           }
         />
         <Route
           exact
           path="/saved-movies"
           element={
-            <>
-              <Header />
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Header
+                loggedIn={loggedIn}
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+              />
               <SavedMovies />
               <Footer />
-            </>
+            </ProtectedRoute>
           }
         />
         <Route
           exact
           path="/profile"
           element={
-            <ProtectedRoute
-              element={
-                <>
-                  <Header />
-                  <Profile />
-                </>
-              }
-              loggedIn={loggedIn}
-              isLogout={signOut}
-              setIsLoading={setIsLoading}
-            />
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Header
+                loggedIn={loggedIn}
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+              />
+              <Profile isLogout={signOut} setIsLoading={setIsLoading} />
+            </ProtectedRoute>
           }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <InfoTooltip
-        isOpen={isInfoTooltipPopupOpen}
+        isOpen={isInfoPopupOpen}
         onClose={closeAllPopups}
         isSuccess={isSuccess}
         name={'info'}

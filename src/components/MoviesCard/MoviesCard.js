@@ -1,25 +1,50 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import MainApi from '../../utils/MainApi';
+import { handleConvertDuration } from '../../utils/utils';
+
+import CurrentUserContext from '../../contexts/CurrentUserContext';
+
 import './MoviesCard.css';
 
-function MoviesCard({ movie }) {
+function MoviesCard({ movie, saveStatus }) {
   const { pathname } = useLocation();
+  const { savedMovies, setSavedMovies } = React.useContext(CurrentUserContext);
   const [isSaved, setIsSaved] = React.useState(false);
-  const handleSaveMovie = () => setIsSaved(true);
-  const handleDeleteMovie = () => setIsSaved(false);
+  const [mainApiId, setMainApiId] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const { nameRU, trailerLink, image, duration } = movie;
+  React.useEffect(() => {
+    setIsSaved(saveStatus.isSaved);
+    setMainApiId(saveStatus.id);
+  }, [saveStatus]);
 
-  const handleConvertDuration = (duration) => {
-    const minutes = duration % 60;
-    const hours = (duration - minutes) / 60;
-    if (hours < 1) {
-      return `${minutes}м`;
-    } else {
-      return `${hours}ч ${minutes}м`;
-    }
+  const handleSaveMovie = () => {
+    setIsLoading(true);
+    MainApi.saveMovie(movie)
+      .then((data) => {
+        setSavedMovies([...savedMovies, data]);
+        setIsSaved(true);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   };
+
+  const handleDeleteMovie = () => {
+    setIsLoading(true);
+    MainApi.deleteMovie(mainApiId)
+      .then(() => {
+        setSavedMovies(savedMovies.filter((data) => {
+          return !(data._id === mainApiId);
+        }));
+        setIsSaved(false);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  };
+
+  const { nameRU, trailerLink, thumbnail, duration } = movie;
 
   return (
     <li className="card">
@@ -34,7 +59,7 @@ function MoviesCard({ movie }) {
         rel="noreferrer"
       >
         <img
-          src={`https://api.nomoreparties.co${image.url}`}
+          src={thumbnail}
           alt={nameRU}
           className="card__image"
         ></img>

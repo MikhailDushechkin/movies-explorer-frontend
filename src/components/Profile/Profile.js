@@ -18,11 +18,6 @@ function Profile({ isLogout, setIsLoading }) {
   const { values, errors, isFormValid, onChange, resetValidation } =
     useValidation();
 
-  // const initialValues = {
-  //   username: userData.name,
-  //   email: userData.email,
-  // };
-
   async function handleEditClick(evt) {
     evt.preventDefault();
     await setEditStatus(!isEdit);
@@ -33,7 +28,7 @@ function Profile({ isLogout, setIsLoading }) {
     evt.preventDefault();
     setIsLoading(true);
     setUserData({
-      name: values.username,
+      name: values.name,
       email: values.email,
     });
 
@@ -57,7 +52,7 @@ function Profile({ isLogout, setIsLoading }) {
   return (
     <main className="profile">
       <section className="profile__wrapper">
-        <h1 className="profile__title">{`Привет, ${userData.name}`}!</h1>
+        <h1 className="profile__title">{`Привет, ${currentUser.name}`}!</h1>
         <Form
           name="edit-profile"
           buttonText="Сохранить"

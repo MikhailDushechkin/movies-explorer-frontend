@@ -7,6 +7,16 @@
   margin: 0 auto;
 }
 
+.cards__search-message {
+  margin: 0 auto;
+  min-height: 18px;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  font-family: "Inter", "Arial", sans-serif;
+}
+
 .movies-card-list__list {
   margin: 0;
   padding: 0;
