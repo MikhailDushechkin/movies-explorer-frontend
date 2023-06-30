@@ -1,23 +1,26 @@
 import React from 'react';
 
-import './Movies.css'
+import SearchForm from '../SearchForm/SearchForm';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import Preloader from '../Preloader/Preloader';
+
+import './Movies.css';
 
 import MoviesApi from '../../utils/MoviesApi';
 import { SearchMessage } from '../../utils/constants';
 import { filterMovies, normalizeMovies } from '../../utils/utils';
 
-import SearchForm from '../SearchForm/SearchForm';
-import MoviesCardList from '../MoviesCardList/MoviesCardList';
-
-import Preloader from '../Preloader/Preloader';
-
-function Movies() {
+function Movies({
+  isLoading,
+  setIsLoading,
+  handleSaveMovie,
+  handleDeleteMovie,
+}) {
   const [searchedMovies, setSearchedMovies] = React.useState([]);
   const [keyWord, setKeyWord] = React.useState('');
   const [isShortMovies, setIsShortMovies] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const storageAllMovies =
+  const storageMovies =
     JSON.parse(localStorage.getItem('storageAllMovies')) || [];
 
   React.useEffect(() => {
@@ -33,13 +36,13 @@ function Movies() {
   }, []);
 
   const getFilteredMovies = (keyWord, isShortMovies) => {
-    if (!storageAllMovies.length) {
+    if (!storageMovies.length) {
       setIsLoading(true);
       MoviesApi.getMovies()
         .then((allMovies) => {
           const normalizedMovies = normalizeMovies(allMovies);
           localStorage.setItem(
-            'storageAllMovies',
+            'storageMovies',
             JSON.stringify(normalizedMovies)
           );
           const filteredMovies = keyWord
@@ -54,7 +57,7 @@ function Movies() {
         .finally(() => setIsLoading(false));
     } else {
       const filteredMovies = keyWord
-        ? filterMovies(storageAllMovies, keyWord, isShortMovies)
+        ? filterMovies(storageMovies, keyWord, isShortMovies)
         : [];
       handleFilterResult(filteredMovies);
     }
@@ -74,7 +77,7 @@ function Movies() {
     getFilteredMovies(keyWord, isShortMovies);
   };
 
-  const handleChangeCheckbox = (isChecked) => {
+  const handleCheckbox = (isChecked) => {
     setIsShortMovies(isChecked);
     localStorage.setItem('storageIsShort', isChecked);
     getFilteredMovies(keyWord, isChecked);
@@ -84,14 +87,20 @@ function Movies() {
     if (errorMessage.length) {
       return <p className="cards__search-message">{errorMessage}</p>;
     }
-    return <MoviesCardList movies={searchedMovies} />;
+    return (
+      <MoviesCardList
+        movies={searchedMovies}
+        handleSaveMovie={handleSaveMovie}
+        handleDeleteMovie={handleDeleteMovie}
+      />
+    );
   };
 
   return (
-    <main className='movies'>
+    <main className="movies">
       <SearchForm
         handleSubmitSearch={handleSubmitSearch}
-        handleChangeCheckbox={handleChangeCheckbox}
+        handleCheckbox={handleCheckbox}
         showError={setErrorMessage}
         isLoading={isLoading}
       />

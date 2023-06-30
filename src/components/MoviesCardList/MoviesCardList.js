@@ -7,10 +7,9 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { Breakpoint, Length } from '../../utils/constants';
 
-function MoviesCardList({ movies, isLiked, onCardLike }) {
+function MoviesCardList({ movies, handleSaveMovie, handleDeleteMovie }) {
   const { pathname } = useLocation();
   const { savedMovies } = React.useContext(CurrentUserContext);
-
   const [chunkLength, setChunkLength] = React.useState(0);
   const [isMoreButton, setIsMoreButton] = React.useState(false);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
@@ -72,6 +71,8 @@ function MoviesCardList({ movies, isLiked, onCardLike }) {
                 key={movie.movieId}
                 movie={movie}
                 saveStatus={checkIsSaved(movie)}
+                handleSaveMovie={handleSaveMovie}
+                handleDeleteMovie={handleDeleteMovie}
               />
             ))
         : '';
@@ -82,6 +83,7 @@ function MoviesCardList({ movies, isLiked, onCardLike }) {
               key={movie.movieId}
               movie={movie}
               saveStatus={{ isSaved: true, id: movie._id }}
+              handleDeleteMovie={handleDeleteMovie}
             />
           ))
         : '';
@@ -91,16 +93,18 @@ function MoviesCardList({ movies, isLiked, onCardLike }) {
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__conteiner">
-        <ul className="movies-card-list__list">
-        {renderMovieCards()}
-        </ul>
-        <button
-          className="movies-card-list__more-button"
-          type="button"
-          onClick={handleMoreClick}
-        >
-          Ещё
-        </button>
+        <ul className="movies-card-list__list">{renderMovieCards()}</ul>
+        {isMoreButton ? (
+          <button
+            className="movies-card-list__more-button"
+            type="button"
+            onClick={handleMoreClick}
+          >
+            Ещё
+          </button>
+        ) : (
+          ''
+        )}
       </div>
     </section>
   );

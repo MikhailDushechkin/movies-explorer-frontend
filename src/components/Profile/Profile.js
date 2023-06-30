@@ -9,8 +9,8 @@ import Form from '../Form/Form';
 import './Profile.css';
 
 function Profile({ isLogout, setIsLoading, isLoading }) {
-  const currentUser = React.useContext(CurrentUserContext);
-  const [userData, setUserData] = React.useState(currentUser.currentUser);
+  const { currentUser } = React.useContext(CurrentUserContext);
+  const [userData, setUserData] = React.useState(currentUser);
   const nameInputRef = React.useRef(false);
 
   const [isEdit, setEditStatus] = React.useState(false);

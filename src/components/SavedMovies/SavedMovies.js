@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './SavedMovies.css'
+import './SavedMovies.css';
 
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
@@ -10,7 +10,7 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { SearchMessage } from '../../utils/constants';
 import { filterMovies } from '../../utils/utils';
 
-function SavedMovies() {
+function SavedMovies({ handleDeleteMovie }) {
   const { savedMovies } = React.useContext(CurrentUserContext);
   const [movies, setMovies] = React.useState([]);
   const [searchParams, setSearchParams] = React.useState({
@@ -43,7 +43,7 @@ function SavedMovies() {
     getFilteredMovies(word, searchParams.isShort);
   };
 
-  const handleChangeCheckbox = (isChecked) => {
+  const handleCheckbox = (isChecked) => {
     setSearchParams({ ...searchParams, isShort: isChecked });
     getFilteredMovies(searchParams.keyWord, isChecked);
   };
@@ -52,14 +52,16 @@ function SavedMovies() {
     if (errorMessage.length) {
       return <p className="cards__search-message">{errorMessage}</p>;
     }
-    return <MoviesCardList movies={movies} />;
+    return (
+      <MoviesCardList movies={movies} handleDeleteMovie={handleDeleteMovie} />
+    );
   };
 
   return (
-    <main className='saved-movies-main'>
+    <main className="saved-movies-main">
       <SearchForm
         handleSubmitSearch={handleSubmitSearch}
-        handleChangeCheckbox={handleChangeCheckbox}
+        handleCheckbox={handleCheckbox}
         showError={setErrorMessage}
       />
       {renderMoviesSection()}

@@ -23,9 +23,7 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(false);
-
   const [savedMovies, setSavedMovies] = React.useState([]);
-
   const [isLoading, setIsLoading] = React.useState(false);
   const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -69,16 +67,47 @@ function App() {
     }
   }
 
-  React.useEffect(() => {
-    if (loggedIn) {
-      MainApi.getUserInfo()
-        .then((data) => {
-          setCurrentUser(data);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {});
+  const handleSaveMovie = ({
+    movie,
+    setIsSaved,
+    savedMovies,
+    setSavedMovies,
+  }) => {
+    setIsLoading(true);
+    MainApi.saveMovie(movie)
+      .then((data) => {
+        setSavedMovies([...savedMovies, data]);
+        setIsSaved(true);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  };
+
+  const handleDeleteMovie = ({ mainApiId, setSavedMovies, setIsSaved }) => {
+    MainApi.deleteMovie(mainApiId)
+      .then(() => {
+        setSavedMovies(
+          savedMovies.filter((data) => {
+            return !(data._id === mainApiId);
+          })
+        );
+        setIsSaved(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleLoginCheck = React.useCallback(async () => {
+    try {
+      const user = await MainApi.getUserInfo();
+      if (user) {
+        setLoggedIn(true);
+        setCurrentUser(user);
+      }
+    } catch (err) {
+      console.log(err);
+      signOut();
     }
-  }, [loggedIn]);
+  }, []);
 
   // функция выхода и очистки
   const signOut = () => {
@@ -95,6 +124,10 @@ function App() {
     setInfoPopupOpen(false);
     setIsMenuOpen(false);
   };
+
+  React.useEffect(() => {
+    handleLoginCheck();
+  }, [loggedIn, handleLoginCheck]);
 
   return (
     <CurrentUserContext.Provider
@@ -148,7 +181,12 @@ function App() {
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
               />
-              <Movies />
+              <Movies
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                handleSaveMovie={handleSaveMovie}
+                handleDeleteMovie={handleDeleteMovie}
+              />
               <Footer />
             </ProtectedRoute>
           }
@@ -163,7 +201,7 @@ function App() {
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
               />
-              <SavedMovies />
+              <SavedMovies handleDeleteMovie={handleDeleteMovie} />
               <Footer />
             </ProtectedRoute>
           }

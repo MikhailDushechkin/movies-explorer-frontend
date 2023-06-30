@@ -10,7 +10,7 @@ import './SearchForm.css';
 
 function SearchForm({
   handleSubmitSearch,
-  handleChangeCheckbox,
+  handleCheckbox,
   showError,
   isLoading,
 }) {
@@ -64,7 +64,7 @@ function SearchForm({
             disabled={isLoading}
           />
         </form>
-        <FilterCheckbox handleCheckbox={handleChangeCheckbox} />
+        <FilterCheckbox handleCheckbox={handleCheckbox} />
       </div>
     </section>
   );
