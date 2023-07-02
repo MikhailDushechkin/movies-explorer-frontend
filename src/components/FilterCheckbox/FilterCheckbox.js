@@ -1,34 +1,17 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import './FilterCheckbox.css';
 
-const FilterCheckbox = ({ handleCheckbox }) => {
-  const { pathname } = useLocation();
-  const [isChecked, setIsChecked] = React.useState(false);
-
-  const handleChange = () => {
-    setIsChecked(!isChecked);
-    handleCheckbox(!isChecked);
-  };
-
-  React.useEffect(() => {
-    if (pathname === '/movies') {
-      const storageIsShort = JSON.parse(localStorage.getItem('storageIsShort'));
-      storageIsShort && setIsChecked(storageIsShort);
-    } else {
-      setIsChecked(false);
-    }
-  }, []);
-
+const FilterCheckbox = ({ onFilterChange, isFiltered, isSearched }) => {
   return (
     <div className="checkbox">
       <label className="checkbox__content">
         <input
           className="checkbox__input"
           type="checkbox"
-          checked={isChecked}
-          onChange={handleChange}
+          checked={isFiltered}
+          disabled={isSearched ? true : false}
+          onChange={(evt) => onFilterChange(evt.target.checked)}
         />
         <span className="checkbox__slider" />
         <span className="checkbox__name">Короткометражки</span>

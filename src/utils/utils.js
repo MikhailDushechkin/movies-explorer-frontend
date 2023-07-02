@@ -1,4 +1,4 @@
-import { SHORT_FILM_DURATION, IMAGES_URL, HTTP_REGEX } from './constants';
+import { SHORT_MOVIE } from './constants';
 
 const handleConvertDuration = (duration) => {
   const minutes = duration % 60;
@@ -10,41 +10,37 @@ const handleConvertDuration = (duration) => {
   }
 };
 
-const filterMovies = (movies, keyWord, isShort) => {
-  const word = keyWord.toLowerCase().trim();
-
-  const searchedMovies = movies
-    .filter((movie) => {
-      const ruName = movie.nameRU && movie.nameRU.toLowerCase().trim();
-      const enName = movie.nameEN && movie.nameEN.toLowerCase().trim();
-      return (ruName.match(word)) || (enName && enName.match(word));
-    });
-
-  if (isShort) {
-    return searchedMovies.filter((movie) => movie.duration <= SHORT_FILM_DURATION);
+const handleMovieSearch = (movies, searchQuery, isSavedMovies) => {
+  const normalizeSearchQuery = searchQuery.toLowerCase().trim();
+  const result = movies.filter((movie) => {
+    const normalizeNameRu = movie.nameRU.toLowerCase().trim();
+    const normalizeNameEn = movie.nameEN.toLowerCase().trim();
+    return (
+      normalizeNameRu.includes(normalizeSearchQuery) ||
+      normalizeNameEn.includes(normalizeSearchQuery)
+    );
+  });
+  if (!isSavedMovies) {
+    localStorage.setItem('storegeFoundMovies', JSON.stringify(result));
+    localStorage.setItem('storegeMoviesSearch', normalizeSearchQuery);
+  } else {
+    localStorage.setItem('storageSavedMoviesSearch', normalizeSearchQuery);
   }
-
-  return searchedMovies;
+  return result;
 };
 
-const normalizeMovies = (movies) => {
-  return movies
-    .map((movie) => ({
-        country: movie.country || 'unknown',
-        director: movie.director || 'unknown',
-        duration: movie.duration || 60,
-        year: movie.year || 2000,
-        description: movie.description || 'unknown',
-        image: `${IMAGES_URL}/${movie.image.url}`,
-        trailerLink: movie.trailerLink,
-        thumbnail: `${IMAGES_URL}/${movie.image.url}`,
-        movieId: movie.id,
-        nameRU: movie.nameRU || 'unknown',
-        nameEN: movie.nameEN || 'unknown',
-      }))
-    .map((movie) => (
-      HTTP_REGEX.test(movie.trailerLink) ? movie : {...movie, trailerLink: movie.image}
-    ));
+const handleMovieFilter = (movies, isFiltered, isSavedMovies) => {
+  if (!isSavedMovies) {
+    localStorage.setItem('storegeIsMoviesFiltered', isFiltered);
+  } else {
+    localStorage.setItem('storegeIsSavedMoviesFiltered', isFiltered);
+  }
+  if (isFiltered) {
+    const result = movies.filter((movie) => movie.duration <= SHORT_MOVIE);
+    return result;
+  } else {
+    return movies;
+  }
 };
 
-export { handleConvertDuration, filterMovies, normalizeMovies };
+export { handleConvertDuration, handleMovieSearch, handleMovieFilter };

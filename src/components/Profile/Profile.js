@@ -20,6 +20,7 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
     isFormValid,
     onChange,
     resetValidation,
+    setFormValid,
   } = useValidation();
 
   async function handleEditClick(evt) {
@@ -52,6 +53,12 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
   React.useEffect(() => {
     resetValidation(false, userData);
   }, [resetValidation, userData]);
+
+  React.useEffect(() => {
+    if (values.name === userData.name && values.email === userData.email) {
+      setFormValid(!isFormValid);
+    }
+  }, [values.name, userData.name, values.email, userData.email]);
 
   return (
     <main className="profile">

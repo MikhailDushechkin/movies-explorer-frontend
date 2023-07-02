@@ -6,8 +6,6 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import './App.css';
 
-import MainApi from '../../utils/MainApi';
-
 import Header from '../Header/Header';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
@@ -17,17 +15,21 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import Footer from '../Footer/Footer';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
-
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+
+import MainApi from '../../utils/MainApi';
+import moviesApi from '../../utils/MoviesApi';
+import { MOVIES_BASE_URL } from '../../utils/constants';
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [queryError, setQueryError] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -67,35 +69,6 @@ function App() {
     }
   }
 
-  const handleSaveMovie = ({
-    movie,
-    setIsSaved,
-    savedMovies,
-    setSavedMovies,
-  }) => {
-    setIsLoading(true);
-    MainApi.saveMovie(movie)
-      .then((data) => {
-        setSavedMovies([...savedMovies, data]);
-        setIsSaved(true);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
-  };
-
-  const handleDeleteMovie = ({ mainApiId, setSavedMovies, setIsSaved }) => {
-    MainApi.deleteMovie(mainApiId)
-      .then(() => {
-        setSavedMovies(
-          savedMovies.filter((data) => {
-            return !(data._id === mainApiId);
-          })
-        );
-        setIsSaved(false);
-      })
-      .catch((err) => console.log(err));
-  };
-
   const handleLoginCheck = React.useCallback(async () => {
     try {
       const user = await MainApi.getUserInfo();
@@ -109,6 +82,85 @@ function App() {
     }
   }, []);
 
+  async function handleGetMovies() {
+    setIsLoading(true);
+    try {
+      const movies = await moviesApi.getMovies();
+      if (movies) {
+        return movies;
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleSaveMovie(movie) {
+    try {
+      const movieSave = await MainApi.saveMovie({
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: `${MOVIES_BASE_URL}${movie.image.url}`,
+        trailerLink: movie.trailerLink,
+        thumbnail: `${MOVIES_BASE_URL}${movie.image.formats.thumbnail.url}`,
+        movieId: movie.id,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+      });
+      if (movieSave) {
+        setSavedMovies([movieSave, ...savedMovies]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const handleGetSavedMovies = React.useCallback(async () => {
+    try {
+      const movies = await MainApi.getSavedMovies();
+      if (movies) {
+        setSavedMovies(movies);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  async function handleDeleteMovie(movie) {
+    const savedMovie = savedMovies.find(
+      (item) => item.movieId === movie.id || item.movieId === movie.movieId
+    );
+    try {
+      const data = await MainApi.deleteMovie(savedMovie._id);
+      if (data) {
+        setSavedMovies((state) =>
+          state.filter((movie) => movie._id !== savedMovie._id)
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const closeAllPopups = () => {
+    setInfoPopupOpen(false);
+    setIsMenuOpen(false);
+  };
+
+  React.useEffect(() => {
+    handleLoginCheck();
+  }, [loggedIn, handleLoginCheck]);
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      handleGetSavedMovies();
+    }
+  }, [loggedIn, handleGetSavedMovies]);
+
   // функция выхода и очистки
   const signOut = () => {
     localStorage.clear();
@@ -119,15 +171,6 @@ function App() {
     closeAllPopups();
     navigate('/', { replace: true });
   };
-
-  const closeAllPopups = () => {
-    setInfoPopupOpen(false);
-    setIsMenuOpen(false);
-  };
-
-  React.useEffect(() => {
-    handleLoginCheck();
-  }, [loggedIn, handleLoginCheck]);
 
   return (
     <CurrentUserContext.Provider
@@ -183,9 +226,12 @@ function App() {
               />
               <Movies
                 isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                handleSaveMovie={handleSaveMovie}
-                handleDeleteMovie={handleDeleteMovie}
+                savedMovies={savedMovies}
+                onSearch={handleGetMovies}
+                onMovieSave={handleSaveMovie}
+                onMovieDelete={handleDeleteMovie}
+                setQueryError={setQueryError}
+                queryError={queryError}
               />
               <Footer />
             </ProtectedRoute>
@@ -201,7 +247,11 @@ function App() {
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
               />
-              <SavedMovies handleDeleteMovie={handleDeleteMovie} />
+              <SavedMovies
+                savedMovies={savedMovies}
+                onMovieDelete={handleDeleteMovie}
+                setQueryError={setQueryError}
+              />
               <Footer />
             </ProtectedRoute>
           }

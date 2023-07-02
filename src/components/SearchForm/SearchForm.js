@@ -2,37 +2,48 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
-import useValidation from '../../hooks/useValidation';
-
-import { SearchMessage } from '../../utils/constants';
 
 import './SearchForm.css';
 
 function SearchForm({
-  handleSubmitSearch,
-  handleCheckbox,
-  showError,
-  isLoading,
+  onSearch,
+  onFilterChange,
+  isFiltered,
+  isSearched,
+  setQueryError,
 }) {
-  const { pathname } = useLocation();
+  const [searchQuery, setSearchQuery] = React.useState('');
 
-  const { values, setValues, onChange, isFormValid, setFormValid } = useValidation();
+  const { pathname } = useLocation();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    isFormValid
-      ? handleSubmitSearch(values.keyWord)
-      : showError(SearchMessage.EMPTY);
+    if (pathname === '/movies') {
+      searchQuery ? onSearch(searchQuery) : setQueryError(true);
+    } else {
+      onSearch(searchQuery);
+    }
   };
 
   React.useEffect(() => {
-    if (pathname === '/movies') {
-      const storageKeyWord = localStorage.getItem('storageKeyWord');
-      storageKeyWord && setValues({ keyWord: storageKeyWord });
-      setFormValid(true);
-    } else {
-      setValues({ keyWord: '' });
+    if (pathname === '/movies' && localStorage.getItem('storageMoviesSearch')) {
+      const savedSearchQuery = localStorage.getItem('storageMoviesSearch');
+      setSearchQuery(savedSearchQuery);
+    } else if (
+      pathname === '/saved-movies' &&
+      localStorage.getItem('storageSavedMoviesSearch')
+    ) {
+      const savedSearchQuery = localStorage.getItem('savedMoviesSearch');
+      setSearchQuery(savedSearchQuery);
     }
+  }, [pathname]);
+
+  React.useEffect(() => {
+    setQueryError(false);
+  }, [searchQuery]);
+
+  React.useEffect(() => {
+    setSearchQuery('');
   }, [pathname]);
 
   return (
@@ -47,24 +58,26 @@ function SearchForm({
           onSubmit={handleSubmit}
         >
           <input
-            value={values.keyWord || ''}
+            value={searchQuery || ''}
             className="search-form__input"
             type="text"
             name="keyWord"
-            id='keyWord'
+            id="keyWord"
             placeholder="Фильм"
             required
-            onChange={onChange}
-            disabled={isLoading}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             className="search-form__submit-button"
             type="submit"
             aria-label="Поиск"
-            disabled={isLoading}
           />
         </form>
-        <FilterCheckbox handleCheckbox={handleCheckbox} />
+        <FilterCheckbox
+          onFilterChange={onFilterChange}
+          isFiltered={isFiltered}
+          isSearched={isSearched}
+        />
       </div>
     </section>
   );

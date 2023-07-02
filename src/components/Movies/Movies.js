@@ -3,108 +3,146 @@ import React from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
+import useResizeScreen from '../../hooks/useResizeScreen';
 
 import './Movies.css';
 
-import MoviesApi from '../../utils/MoviesApi';
-import { SearchMessage } from '../../utils/constants';
-import { filterMovies, normalizeMovies } from '../../utils/utils';
+import { handleMovieSearch, handleMovieFilter } from '../../utils/utils';
+import { Breakpoint, Length } from '../../utils/constants';
 
 function Movies({
   isLoading,
-  setIsLoading,
-  handleSaveMovie,
-  handleDeleteMovie,
+  savedMovies,
+  onSearch,
+  onMovieSave,
+  onMovieDelete,
+  setQueryError,
+  queryError,
 }) {
-  const [searchedMovies, setSearchedMovies] = React.useState([]);
-  const [keyWord, setKeyWord] = React.useState('');
-  const [isShortMovies, setIsShortMovies] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const storageMovies =
-    JSON.parse(localStorage.getItem('storageAllMovies')) || [];
+  const [initialMovies, setInitialMovies] = React.useState([]);
+  const [MoviesRender, setMoviesRender] = React.useState([]);
+  const [foundMovies, setFoundMovies] = React.useState([]);
+  const [MoviesRendered, setMoviesRendered] = React.useState({});
+  const [isFiltered, setIsFiltered] = React.useState(false);
+  const [isMoviesNotFound, setMoviesNotFound] = React.useState(false);
+  const [isSearched, setIsSearched] = React.useState(false);
+
+  const screenWidth = useResizeScreen();
+
+  const handleSearchAndFilter = React.useCallback(
+    (movies, searchQuery) => {
+      const foundMovies = handleMovieSearch(movies, searchQuery, false);
+      setFoundMovies(foundMovies);
+      if (foundMovies.length) {
+        const filtered = handleMovieFilter(foundMovies, isFiltered, false);
+        setIsSearched(false);
+        setMoviesRender(filtered);
+        if (!filtered.length) {
+          setIsSearched(false);
+          setMoviesNotFound(true);
+        }
+      } else {
+        setMoviesNotFound(true);
+        setIsSearched(false);
+        setMoviesRender(foundMovies);
+      }
+    },
+    [isFiltered]
+  );
+
+  const handleOnSearchSubmit = React.useCallback(
+    async (searchQuery) => {
+      setMoviesNotFound(false);
+      setIsSearched(true);
+      if (initialMovies.length) {
+        handleSearchAndFilter(initialMovies, searchQuery);
+      } else {
+        const moviesData = await onSearch();
+        if (moviesData) {
+          setInitialMovies(moviesData);
+          handleSearchAndFilter(moviesData, searchQuery);
+        }
+      }
+    },
+    [handleSearchAndFilter, initialMovies, onSearch]
+  );
+
+  const handleOnFilterClick = React.useCallback(
+    (isChecked) => {
+      setIsFiltered(isChecked);
+      setMoviesNotFound(false);
+      const filtered = handleMovieFilter(foundMovies, isChecked, false);
+      setMoviesRender(filtered);
+      if (!filtered.length) {
+        setMoviesNotFound(true);
+      }
+    },
+    [foundMovies]
+  );
 
   React.useEffect(() => {
-    const storageSearchResult =
-      JSON.parse(localStorage.getItem('storageSearchResult')) || [];
-    const storageKeyWord = localStorage.getItem('storageKeyWord') || '';
-    const storageIsShort =
-      JSON.parse(localStorage.getItem('storageIsShort')) || false;
-
-    storageSearchResult && setSearchedMovies(storageSearchResult);
-    storageKeyWord && setKeyWord(storageKeyWord);
-    storageIsShort && setIsShortMovies(storageIsShort);
-  }, []);
-
-  const getFilteredMovies = (keyWord, isShortMovies) => {
-    if (!storageMovies.length) {
-      setIsLoading(true);
-      MoviesApi.getMovies()
-        .then((allMovies) => {
-          const normalizedMovies = normalizeMovies(allMovies);
-          localStorage.setItem(
-            'storageMovies',
-            JSON.stringify(normalizedMovies)
-          );
-          const filteredMovies = keyWord
-            ? filterMovies(normalizedMovies, keyWord, isShortMovies)
-            : [];
-          handleFilterResult(filteredMovies);
-        })
-        .catch((err) => {
-          console.log(err);
-          setErrorMessage(SearchMessage.SEARCH_ERROR);
-        })
-        .finally(() => setIsLoading(false));
+    if (screenWidth >= Breakpoint.DESKTOP) {
+      setMoviesRendered(Length.DESKTOP);
+    } else if (
+      screenWidth < Breakpoint.DESKTOP &&
+      screenWidth >= Breakpoint.TABLET
+    ) {
+      setMoviesRendered(Length.TABLET);
     } else {
-      const filteredMovies = keyWord
-        ? filterMovies(storageMovies, keyWord, isShortMovies)
-        : [];
-      handleFilterResult(filteredMovies);
+      setMoviesRendered(Length.MOBILE);
     }
-  };
+  }, [screenWidth]);
 
-  const handleFilterResult = (movies) => {
-    setSearchedMovies(movies);
-    localStorage.setItem('storageSearchResult', JSON.stringify(movies));
-    movies.length === 0
-      ? setErrorMessage(SearchMessage.NOT_FOUND)
-      : setErrorMessage('');
-  };
-
-  const handleSubmitSearch = (keyWord) => {
-    setKeyWord(keyWord);
-    localStorage.setItem('storageKeyWord', keyWord);
-    getFilteredMovies(keyWord, isShortMovies);
-  };
-
-  const handleCheckbox = (isChecked) => {
-    setIsShortMovies(isChecked);
-    localStorage.setItem('storageIsShort', isChecked);
-    getFilteredMovies(keyWord, isChecked);
-  };
-
-  const renderMoviesSection = () => {
-    if (errorMessage.length) {
-      return <p className="cards__search-message">{errorMessage}</p>;
+  React.useEffect(() => {
+    if (
+      localStorage.getItem('storageFoundMovies') &&
+      localStorage.getItem('storageIsMoviesFilterOn')
+    ) {
+      const filter = JSON.parse(
+        localStorage.getItem('storageIsMoviesFilterOn')
+      );
+      setIsFiltered(filter);
+      const foundMovies = JSON.parse(
+        localStorage.getItem('storageFoundMovies')
+      );
+      setFoundMovies(foundMovies);
+      if (!foundMovies.length) {
+        setMoviesNotFound(true);
+        setMoviesRender(foundMovies);
+      } else {
+        const filtered = handleMovieFilter(foundMovies, filter, false);
+        setMoviesRender(filtered);
+        if (!filtered.length) {
+          setMoviesNotFound(true);
+        }
+      }
     }
-    return (
-      <MoviesCardList
-        movies={searchedMovies}
-        handleSaveMovie={handleSaveMovie}
-        handleDeleteMovie={handleDeleteMovie}
-      />
-    );
-  };
+  }, []);
 
   return (
     <main className="movies">
       <SearchForm
-        handleSubmitSearch={handleSubmitSearch}
-        handleCheckbox={handleCheckbox}
-        showError={setErrorMessage}
-        isLoading={isLoading}
+        isFiltered={isFiltered}
+        isSearched={isSearched}
+        onSearch={handleOnSearchSubmit}
+        onFilterChange={handleOnFilterClick}
+        setQueryError={setQueryError}
       />
-      {isLoading ? <Preloader /> : renderMoviesSection()}
+      {isLoading ? (
+        <Preloader />
+      ) : (
+        <MoviesCardList
+          movies={MoviesRender}
+          MoviesRendered={MoviesRendered}
+          isMoviesNotFound={isMoviesNotFound}
+          onMovieSave={onMovieSave}
+          onMovieDelete={onMovieDelete}
+          isLoading={isLoading}
+          queryError={queryError}
+          savedMovies={savedMovies}
+          setMoviesNotFound={setMoviesNotFound}
+        />
+      )}
     </main>
   );
 }

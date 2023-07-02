@@ -1,7 +1,7 @@
-import { MOVIES_BASE_URL } from './constants';
+import { BEATFILM_MOVIES_URL } from './constants';
 
 class MoviesApi {
-  constructor ({ baseUrl, headers }) {
+  constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
   }
@@ -16,16 +16,16 @@ class MoviesApi {
   getMovies() {
     return fetch(this._baseUrl, {
       method: 'GET',
-      headers: this._headers
+      headers: this._headers,
     }).then(this._checkPromise);
   }
 }
 
 const moviesApi = new MoviesApi({
-  baseUrl: MOVIES_BASE_URL,
+  baseUrl: BEATFILM_MOVIES_URL,
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
 export default moviesApi;

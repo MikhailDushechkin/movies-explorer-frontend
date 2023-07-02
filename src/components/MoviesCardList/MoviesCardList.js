@@ -4,101 +4,85 @@ import { useLocation } from 'react-router-dom';
 import './MoviesCardList.css';
 
 import MoviesCard from '../MoviesCard/MoviesCard';
-import CurrentUserContext from '../../contexts/CurrentUserContext';
-import { Breakpoint, Length } from '../../utils/constants';
+import { SearchMessage } from '../../utils/constants';
 
-function MoviesCardList({ movies, handleSaveMovie, handleDeleteMovie }) {
+function MoviesCardList({
+  movies,
+  savedMovies,
+  MoviesRendered,
+  onMovieSave,
+  onMovieDelete,
+  isLoading,
+  isMoviesNotFound,
+  setMoviesNotFound,
+  queryError,
+}) {
+  const [MoviesRender, setMoviesRender] = React.useState([]);
   const { pathname } = useLocation();
-  const { savedMovies } = React.useContext(CurrentUserContext);
-  const [chunkLength, setChunkLength] = React.useState(0);
-  const [isMoreButton, setIsMoreButton] = React.useState(false);
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
-
-  const handleResizeWindow = () => setWindowWidth(window.innerWidth);
 
   React.useEffect(() => {
-    window.addEventListener('resize', handleResizeWindow);
-    return () => {
-      window.removeEventListener('resize', handleResizeWindow);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (windowWidth <= Breakpoint.MOBILE) {
-      setChunkLength(Length.MOBILE);
-    } else if (windowWidth <= Breakpoint.TABLET) {
-      setChunkLength(Length.TABLET);
-    } else {
-      setChunkLength(Length.DESKTOP);
+    if (pathname === '/movies' && movies.length) {
+      const result = movies.filter((movie, index) => {
+        return index < MoviesRendered.total;
+      });
+      setMoviesRender(result);
     }
-  }, [windowWidth, movies.length]);
+  }, [pathname, movies, MoviesRendered]);
 
   React.useEffect(() => {
-    if (pathname === '/movies') {
-      movies.length > chunkLength
-        ? setIsMoreButton(true)
-        : setIsMoreButton(false);
-    } else {
-      setIsMoreButton(false);
+    if (pathname === '/saved-movies') {
+      setMoviesRender(movies);
     }
-  }, [pathname, movies.length, chunkLength]);
+  }, [pathname, movies]);
 
-  const handleMoreClick = () => {
-    setChunkLength((current) => {
-      if (windowWidth <= Breakpoint.TABLET) {
-        return current + 2;
-      }
-      return current + 3;
+  const handleMoreButton = () => {
+    const start = MoviesRender.length;
+    const end = start + MoviesRendered.more;
+    const count = movies.length - start;
+    if (count > 0) {
+      const additionalCards = movies.slice(start, end);
+      setMoviesRender([...MoviesRender, ...additionalCards]);
+    }
+  };
+
+  const handleSavedStatus = (savedMovies, movieCard) => {
+    return savedMovies.find((movie) => {
+      return movie.movieId === (movieCard.id || movieCard.movieId);
     });
   };
 
-  const checkIsSaved = (movie) => {
-    const targetMovie = savedMovies.find(
-      (film) => film.movieId === movie.movieId
-    );
-    return targetMovie
-      ? { isSaved: true, id: targetMovie._id }
-      : { isSaved: false, id: '' };
-  };
-
-  const renderMovieCards = () => {
-    if (pathname === '/movies') {
-      return movies.length
-        ? movies
-            .slice(0, chunkLength)
-            .map((movie) => (
-              <MoviesCard
-                key={movie.movieId}
-                movie={movie}
-                saveStatus={checkIsSaved(movie)}
-                handleSaveMovie={handleSaveMovie}
-                handleDeleteMovie={handleDeleteMovie}
-              />
-            ))
-        : '';
-    } else {
-      return movies.length
-        ? movies.map((movie) => (
-            <MoviesCard
-              key={movie.movieId}
-              movie={movie}
-              saveStatus={{ isSaved: true, id: movie._id }}
-              handleDeleteMovie={handleDeleteMovie}
-            />
-          ))
-        : '';
-    }
-  };
+  React.useEffect(() => {
+    setMoviesNotFound(false);
+  }, [pathname]);
 
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__conteiner">
-        <ul className="movies-card-list__list">{renderMovieCards()}</ul>
-        {isMoreButton ? (
+        {isMoviesNotFound && (
+          <p className="cards__search-message">{SearchMessage.NOT_FOUND}</p>
+        )}
+        {queryError && (
+          <p className="cards__search-message">{SearchMessage.EMPTY}</p>
+        )}
+        {pathname === '/saved-movies' && savedMovies.length === 0 && (
+          <p className="cards__search-message">{SearchMessage.NOT_SAVED}</p>
+        )}
+        <ul className="movies-card-list__list">
+          {MoviesRender.map((movie) => (
+            <MoviesCard
+              movie={movie}
+              key={movie.id || movie._id}
+              isSaved={handleSavedStatus(savedMovies, movie)}
+              onMovieSave={onMovieSave}
+              onMovieDelete={onMovieDelete}
+            />
+          ))}
+        </ul>
+        {MoviesRender.length >= 5 ? (
           <button
             className="movies-card-list__more-button"
             type="button"
-            onClick={handleMoreClick}
+            onClick={handleMoreButton}
           >
             Ещё
           </button>

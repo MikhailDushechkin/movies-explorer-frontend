@@ -5,66 +5,121 @@ import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
-import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { handleMovieSearch, handleMovieFilter } from '../../utils/utils';
 
-import { SearchMessage } from '../../utils/constants';
-import { filterMovies } from '../../utils/utils';
+function SavedMovies({ savedMovies, onMovieDelete, setQueryError }) {
+  const [MoviesRender, setMoviesRender] = React.useState([]);
+  const [filteredMovies, setFilteredMovies] = React.useState([]);
+  const [isFiltered, setIsFiltered] = React.useState(false);
+  const [isSearched, setIsSearched] = React.useState(false);
+  const [isMoviesNotFound, setMoviesNotFound] = React.useState(false);
 
-function SavedMovies({ handleDeleteMovie }) {
-  const { savedMovies } = React.useContext(CurrentUserContext);
-  const [movies, setMovies] = React.useState([]);
-  const [searchParams, setSearchParams] = React.useState({
-    keyWord: '',
-    isShort: false,
-  });
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const handleOnSearchSubmit = React.useCallback(
+    (searchQuery) => {
+      setMoviesNotFound(false);
+      setIsSearched(true);
+      if (savedMovies.length) {
+        const found = handleMovieSearch(savedMovies, searchQuery, true);
+        setFilteredMovies(found);
+        if (!found.length) {
+          setMoviesNotFound(true);
+          setIsSearched(false);
+          setMoviesRender(found);
+        } else {
+          const filtered = handleMovieFilter(found, isFiltered, true);
+          setIsSearched(false);
+          setMoviesRender(filtered);
+          if (!filtered.length) {
+            setIsSearched(false);
+            setMoviesNotFound(true);
+          }
+        }
+      } else {
+        setIsSearched(false);
+        setMoviesNotFound(true);
+      }
+    },
+    [savedMovies, isFiltered]
+  );
 
-  const getFilteredMovies = (keyWord, isShort) => {
-    const filteredMovies = filterMovies(savedMovies, keyWord, isShort);
-    filteredMovies.length === 0
-      ? setErrorMessage(SearchMessage.NOT_FOUND)
-      : setErrorMessage('');
-    !savedMovies.length
-      ? setErrorMessage(SearchMessage.NOT_SAVED)
-      : setErrorMessage('');
-    setMovies(filteredMovies);
-  };
+  const handleOnFilterClick = React.useCallback(
+    (isChecked) => {
+      setIsFiltered(isChecked);
+      setMoviesNotFound(false);
+      const filtered = handleMovieFilter(filteredMovies, isChecked, true);
+      setMoviesRender(filtered);
+      if (!filtered.length) {
+        setMoviesNotFound(true);
+      }
+    },
+    [filteredMovies]
+  );
 
   React.useEffect(() => {
-    setMovies(savedMovies);
-    getFilteredMovies(searchParams.keyWord, searchParams.isShort);
-    !savedMovies.length
-      ? setErrorMessage(SearchMessage.NOT_SAVED)
-      : setErrorMessage('');
+    setMoviesNotFound(false);
+    if (
+      localStorage.getItem('savedMoviesSearchQuery') &&
+      localStorage.getItem('isSavedMoviesFiltered')
+    ) {
+      const filter = JSON.parse(localStorage.getItem('isSavedMoviesFiltered'));
+      setIsFiltered(filter);
+      const searchQuery = localStorage.getItem('savedMoviesSearchQuery');
+      const foundMovies = handleMovieSearch(savedMovies, searchQuery, true);
+      setFilteredMovies(foundMovies);
+      if (foundMovies.length) {
+        const filtered = handleMovieFilter(foundMovies, filter, true);
+        setMoviesRender(filtered);
+        if (!filtered.length) {
+          setMoviesNotFound(true);
+        } else {
+          setMoviesNotFound(true);
+          setMoviesRender(foundMovies);
+        }
+      }
+    } else if (
+      !localStorage.getItem('storageSavedMoviesSearch') &&
+      localStorage.getItem('storageIsSavedMoviesFiltered')
+    ) {
+      setFilteredMovies(savedMovies);
+      const filter = JSON.parse(
+        localStorage.getItem('storageIsSavedMoviesFiltered')
+      );
+      setIsFiltered(filter);
+      const filtered = handleMovieFilter(savedMovies, filter, true);
+      setMoviesRender(filtered);
+      if (!filtered.length) {
+        setMoviesNotFound(true);
+      }
+    } else {
+      setMoviesRender(savedMovies);
+      setFilteredMovies(savedMovies);
+    }
   }, [savedMovies]);
 
-  const handleSubmitSearch = (word) => {
-    setSearchParams({ ...searchParams, keyWord: word });
-    getFilteredMovies(word, searchParams.isShort);
-  };
-
-  const handleCheckbox = (isChecked) => {
-    setSearchParams({ ...searchParams, isShort: isChecked });
-    getFilteredMovies(searchParams.keyWord, isChecked);
-  };
-
-  const renderMoviesSection = () => {
-    if (errorMessage.length) {
-      return <p className="cards__search-message">{errorMessage}</p>;
+  React.useEffect(() => {
+    if (savedMovies.length) {
+      savedMovies.reverse();
+    } else {
+      setMoviesNotFound(false);
     }
-    return (
-      <MoviesCardList movies={movies} handleDeleteMovie={handleDeleteMovie} />
-    );
-  };
+  }, [savedMovies]);
 
   return (
     <main className="saved-movies-main">
       <SearchForm
-        handleSubmitSearch={handleSubmitSearch}
-        handleCheckbox={handleCheckbox}
-        showError={setErrorMessage}
+        onSearch={handleOnSearchSubmit}
+        onFilterChange={handleOnFilterClick}
+        isFiltered={isFiltered}
+        isSearched={isSearched}
+        setQueryError={setQueryError}
       />
-      {renderMoviesSection()}
+      <MoviesCardList
+        movies={MoviesRender}
+        savedMovies={savedMovies}
+        isMoviesNotFound={isMoviesNotFound}
+        onMovieDelete={onMovieDelete}
+        setMoviesNotFound={setMoviesNotFound}
+      />
     </main>
   );
 }
