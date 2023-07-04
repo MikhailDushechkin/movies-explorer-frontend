@@ -58,12 +58,12 @@ function SavedMovies({ savedMovies, onMovieDelete, setQueryError }) {
   React.useEffect(() => {
     setMoviesNotFound(false);
     if (
-      localStorage.getItem('savedMoviesSearchQuery') &&
-      localStorage.getItem('isSavedMoviesFiltered')
+      localStorage.getItem('storageSavedMoviesSearch') &&
+      localStorage.getItem('storageIsSavedMoviesFiltered')
     ) {
-      const filter = JSON.parse(localStorage.getItem('isSavedMoviesFiltered'));
+      const filter = JSON.parse(localStorage.getItem('storageIsSavedMoviesFiltered'));
       setIsFiltered(filter);
-      const searchQuery = localStorage.getItem('savedMoviesSearchQuery');
+      const searchQuery = localStorage.getItem('storageSavedMoviesSearch');
       const foundMovies = handleMovieSearch(savedMovies, searchQuery, true);
       setFilteredMovies(foundMovies);
       if (foundMovies.length) {

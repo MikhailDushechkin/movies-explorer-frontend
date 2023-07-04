@@ -21,8 +21,8 @@ const handleMovieSearch = (movies, searchQuery, isSavedMovies) => {
     );
   });
   if (!isSavedMovies) {
-    localStorage.setItem('storegeFoundMovies', JSON.stringify(result));
-    localStorage.setItem('storegeMoviesSearch', normalizeSearchQuery);
+    localStorage.setItem('storageFoundMovies', JSON.stringify(result));
+    localStorage.setItem('storageMoviesSearch', normalizeSearchQuery);
   } else {
     localStorage.setItem('storageSavedMoviesSearch', normalizeSearchQuery);
   }
@@ -31,9 +31,9 @@ const handleMovieSearch = (movies, searchQuery, isSavedMovies) => {
 
 const handleMovieFilter = (movies, isFiltered, isSavedMovies) => {
   if (!isSavedMovies) {
-    localStorage.setItem('storegeIsMoviesFiltered', isFiltered);
+    localStorage.setItem('storageIsMoviesFiltered', isFiltered);
   } else {
-    localStorage.setItem('storegeIsSavedMoviesFiltered', isFiltered);
+    localStorage.setItem('storageIsSavedMoviesFiltered', isFiltered);
   }
   if (isFiltered) {
     const result = movies.filter((movie) => movie.duration <= SHORT_MOVIE);

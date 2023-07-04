@@ -42,7 +42,7 @@ function App() {
         handleLogin(email, password);
         setIsSuccess(true);
         setTimeout(() => setInfoPopupOpen(false), 1000);
-        setTimeout(() => navigate('/signin', { replace: true }), 1500);
+        setTimeout(() => navigate('/movies', { replace: true }), 1500);
       }
     } catch (err) {
       console.error(err);
@@ -78,7 +78,6 @@ function App() {
       }
     } catch (err) {
       console.log(err);
-      signOut();
     }
   }, []);
 
@@ -162,15 +161,22 @@ function App() {
   }, [loggedIn, handleGetSavedMovies]);
 
   // функция выхода и очистки
-  const signOut = () => {
-    localStorage.clear();
-    setLoggedIn(false);
-    setCurrentUser({});
-    setSavedMovies([]);
-    setIsLoading(false);
-    closeAllPopups();
-    navigate('/', { replace: true });
-  };
+  async function signOut() {
+    try {
+      const logout = await MainApi.logout();
+      if (logout) {
+        localStorage.clear();
+        setLoggedIn(false);
+        setCurrentUser({});
+        setSavedMovies([]);
+        setIsLoading(false);
+        closeAllPopups();
+        navigate('/', { replace: true });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <CurrentUserContext.Provider

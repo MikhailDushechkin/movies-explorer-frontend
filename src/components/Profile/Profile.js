@@ -58,6 +58,10 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
     if (values.name === userData.name && values.email === userData.email) {
       setFormValid(!isFormValid);
     }
+
+    if(!isEdit) {
+      setFormValid(!isFormValid);
+    }
   }, [values.name, userData.name, values.email, userData.email]);
 
   return (

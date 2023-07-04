@@ -33,7 +33,7 @@ function SearchForm({
       pathname === '/saved-movies' &&
       localStorage.getItem('storageSavedMoviesSearch')
     ) {
-      const savedSearchQuery = localStorage.getItem('savedMoviesSearch');
+      const savedSearchQuery = localStorage.getItem('storageSavedMoviesSearch');
       setSearchQuery(savedSearchQuery);
     }
   }, [pathname]);
@@ -41,10 +41,6 @@ function SearchForm({
   React.useEffect(() => {
     setQueryError(false);
   }, [searchQuery]);
-
-  React.useEffect(() => {
-    setSearchQuery('');
-  }, [pathname]);
 
   return (
     <section className="search-form">

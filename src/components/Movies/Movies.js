@@ -96,10 +96,10 @@ function Movies({
   React.useEffect(() => {
     if (
       localStorage.getItem('storageFoundMovies') &&
-      localStorage.getItem('storageIsMoviesFilterOn')
+      localStorage.getItem('storageIsMoviesFiltered')
     ) {
       const filter = JSON.parse(
-        localStorage.getItem('storageIsMoviesFilterOn')
+        localStorage.getItem('storageIsMoviesFiltered')
       );
       setIsFiltered(filter);
       const foundMovies = JSON.parse(
