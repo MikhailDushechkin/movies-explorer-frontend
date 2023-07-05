@@ -5,10 +5,18 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 import useValidation from '../../hooks/useValidation';
 import Preloader from '../Preloader/Preloader';
 import Form from '../Form/Form';
+import { InfoMessage } from '../../utils/constants';
 
 import './Profile.css';
 
-function Profile({ isLogout, setIsLoading, isLoading }) {
+function Profile({
+  isLogout,
+  setIsLoading,
+  isLoading,
+  setInfoMessageText,
+  setInfoPopupOpen,
+  setIsSuccess,
+}) {
   const { currentUser } = React.useContext(CurrentUserContext);
   const [userData, setUserData] = React.useState(currentUser);
   const nameInputRef = React.useRef(false);
@@ -32,6 +40,7 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
   async function handleSubmit(evt) {
     evt.preventDefault();
     setIsLoading(true);
+    setInfoPopupOpen(true);
     setUserData({
       name: values.name,
       email: values.email,
@@ -43,11 +52,17 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
     })
       .then(() => {
         setEditStatus(false);
+        setIsSuccess(true);
+        setInfoMessageText(InfoMessage.EDIT_SUCCESS);
+        setTimeout(() => setInfoPopupOpen(false), 1000);
       })
       .catch(async (err) => {
         console.log(err);
+        setInfoMessageText(InfoMessage.EDIT_FAILED)
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   React.useEffect(() => {
@@ -59,7 +74,7 @@ function Profile({ isLogout, setIsLoading, isLoading }) {
       setFormValid(!isFormValid);
     }
 
-    if(!isEdit) {
+    if (!isEdit) {
       setFormValid(!isFormValid);
     }
   }, [values.name, userData.name, values.email, userData.email]);

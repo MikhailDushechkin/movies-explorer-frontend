@@ -3,9 +3,11 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import { InfoMessage } from '../../utils/constants';
 
 import './App.css';
 
+import Preloader from '../Preloader/Preloader';
 import Header from '../Header/Header';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
@@ -28,8 +30,10 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [InfoMessageText, setInfoMessageText] = React.useState('');
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [queryError, setQueryError] = React.useState(false);
+  const [isPreloaderActive, setIsPreloaderActive] = React.useState(true);
 
   const navigate = useNavigate();
 
@@ -41,11 +45,13 @@ function App() {
       if (user) {
         handleLogin(email, password);
         setIsSuccess(true);
+        setInfoMessageText(InfoMessage.REG_SUCCESS);
         setTimeout(() => setInfoPopupOpen(false), 1000);
         setTimeout(() => navigate('/movies', { replace: true }), 1500);
       }
     } catch (err) {
       console.error(err);
+      setInfoMessageText(InfoMessage.AUTH_FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -59,11 +65,13 @@ function App() {
       if (user) {
         setLoggedIn(true);
         setIsSuccess(true);
+        setInfoMessageText(InfoMessage.AUTH_SUCCESS);
         setTimeout(() => setInfoPopupOpen(false), 1000);
         setTimeout(() => navigate('/movies', { replace: true }), 1500);
       }
     } catch (err) {
       console.error(err);
+      setInfoMessageText(InfoMessage.AUTH_FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -78,6 +86,8 @@ function App() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsPreloaderActive(false);
     }
   }, []);
 
@@ -160,7 +170,6 @@ function App() {
     }
   }, [loggedIn, handleGetSavedMovies]);
 
-  // функция выхода и очистки
   async function signOut() {
     try {
       const logout = await MainApi.logout();
@@ -179,116 +188,129 @@ function App() {
   }
 
   return (
-    <CurrentUserContext.Provider
-      value={{ currentUser, setCurrentUser, savedMovies, setSavedMovies }}
-    >
-      <Routes>
-        <Route
-          exact
-          path="/signup"
-          element={
-            loggedIn ? (
-              <Navigate to="/signin" />
-            ) : (
-              <Register handleRegister={handleRegister} isLoading={isLoading} />
-            )
-          }
-        />
-        <Route
-          exact
-          path="/signin"
-          element={
-            loggedIn ? (
-              <Navigate to="/movies" />
-            ) : (
-              <Login handleLogin={handleLogin} isLoading={isLoading} />
-            )
-          }
-        />
-        <Route
-          exact
-          path="/"
-          element={
-            <>
-              <Header
-                loggedIn={loggedIn}
-                isMenuOpen={isMenuOpen}
-                setIsMenuOpen={setIsMenuOpen}
-              />
-              <Main />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          exact
-          path="/movies"
-          element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <Header
-                loggedIn={loggedIn}
-                isMenuOpen={isMenuOpen}
-                setIsMenuOpen={setIsMenuOpen}
-              />
-              <Movies
-                isLoading={isLoading}
-                savedMovies={savedMovies}
-                onSearch={handleGetMovies}
-                onMovieSave={handleSaveMovie}
-                onMovieDelete={handleDeleteMovie}
-                setQueryError={setQueryError}
-                queryError={queryError}
-              />
-              <Footer />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          exact
-          path="/saved-movies"
-          element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <Header
-                loggedIn={loggedIn}
-                isMenuOpen={isMenuOpen}
-                setIsMenuOpen={setIsMenuOpen}
-              />
-              <SavedMovies
-                savedMovies={savedMovies}
-                onMovieDelete={handleDeleteMovie}
-                setQueryError={setQueryError}
-              />
-              <Footer />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          exact
-          path="/profile"
-          element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <Header
-                loggedIn={loggedIn}
-                isMenuOpen={isMenuOpen}
-                setIsMenuOpen={setIsMenuOpen}
-              />
-              <Profile
-                isLogout={signOut}
-                setIsLoading={setIsLoading}
-                isLoading={isLoading}
-              />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <InfoTooltip
-        isOpen={isInfoPopupOpen}
-        onClose={closeAllPopups}
-        isSuccess={isSuccess}
-        name={'info'}
-      />
-    </CurrentUserContext.Provider>
+    <div className="content">
+      {isPreloaderActive ? (
+        <Preloader />
+      ) : (
+        <CurrentUserContext.Provider
+          value={{ currentUser, setCurrentUser, savedMovies, setSavedMovies }}
+        >
+          <Routes>
+            <Route
+              exact
+              path="/signup"
+              element={
+                loggedIn ? (
+                  <Navigate to="/signin" />
+                ) : (
+                  <Register
+                    handleRegister={handleRegister}
+                    isLoading={isLoading}
+                  />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/signin"
+              element={
+                loggedIn ? (
+                  <Navigate to="/movies" />
+                ) : (
+                  <Login handleLogin={handleLogin} isLoading={isLoading} />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/"
+              element={
+                <>
+                  <Header
+                    loggedIn={loggedIn}
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                  />
+                  <Main />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              exact
+              path="/movies"
+              element={
+                <ProtectedRoute loggedIn={loggedIn}>
+                  <Header
+                    loggedIn={loggedIn}
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                  />
+                  <Movies
+                    isLoading={isLoading}
+                    savedMovies={savedMovies}
+                    onSearch={handleGetMovies}
+                    onMovieSave={handleSaveMovie}
+                    onMovieDelete={handleDeleteMovie}
+                    setQueryError={setQueryError}
+                    queryError={queryError}
+                  />
+                  <Footer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              exact
+              path="/saved-movies"
+              element={
+                <ProtectedRoute loggedIn={loggedIn}>
+                  <Header
+                    loggedIn={loggedIn}
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                  />
+                  <SavedMovies
+                    savedMovies={savedMovies}
+                    onMovieDelete={handleDeleteMovie}
+                    setQueryError={setQueryError}
+                  />
+                  <Footer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              exact
+              path="/profile"
+              element={
+                <ProtectedRoute loggedIn={loggedIn}>
+                  <Header
+                    loggedIn={loggedIn}
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                  />
+                  <Profile
+                    isLogout={signOut}
+                    setIsLoading={setIsLoading}
+                    isLoading={isLoading}
+                    setInfoMessageText={setInfoMessageText}
+                    setInfoPopupOpen={setInfoPopupOpen}
+                    setIsSuccess={setIsSuccess}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <InfoTooltip
+            isOpen={isInfoPopupOpen}
+            onClose={closeAllPopups}
+            isSuccess={isSuccess}
+            message={InfoMessageText}
+            name={'info'}
+          />
+        </CurrentUserContext.Provider>
+      )}
+    </div>
   );
 }
 

@@ -23,14 +23,12 @@ function InfoTooltip(props) {
           src={props.isSuccess ? resolveSignImage : rejectSignImage}
           alt={
             props.isSuccess
-              ? 'иконка успешной регистрации'
-              : 'иконка неуспешного действия'
+              ? 'иконка успешного выполнения действия'
+              : 'иконка неуспешного выполнения действия'
           }
         />
         <h2 className="popup__title">
-          {props.isSuccess
-            ? 'Добро пожаловать!'
-            : 'Что-то пошло не так! Попробуйте ещё раз.'}
+          {props.message}
         </h2>
         <button
           type="button"
