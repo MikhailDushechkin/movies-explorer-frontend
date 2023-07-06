@@ -66,14 +66,14 @@ function SavedMovies({ savedMovies, onMovieDelete, setQueryError }) {
       const searchQuery = localStorage.getItem('storageSavedMoviesSearch');
       const foundMovies = handleMovieSearch(savedMovies, searchQuery, true);
       setFilteredMovies(foundMovies);
-      if (foundMovies.length) {
+      if (!foundMovies.length) {
+        setMoviesNotFound(true);
+          setMoviesRender(foundMovies);
+       } else {
         const filtered = handleMovieFilter(foundMovies, filter, true);
         setMoviesRender(filtered);
         if (!filtered.length) {
           setMoviesNotFound(true);
-        } else {
-          setMoviesNotFound(true);
-          setMoviesRender(foundMovies);
         }
       }
     } else if (

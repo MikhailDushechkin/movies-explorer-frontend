@@ -78,7 +78,7 @@ function MoviesCardList({
             />
           ))}
         </ul>
-        {MoviesRender.length >= 5 ? (
+        {MoviesRender.length >= 5 && MoviesRender.length < movies.length ? (
           <button
             className="movies-card-list__more-button"
             type="button"

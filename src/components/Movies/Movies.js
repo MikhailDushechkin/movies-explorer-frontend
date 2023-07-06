@@ -54,17 +54,21 @@ function Movies({
     async (searchQuery) => {
       setMoviesNotFound(false);
       setIsSearched(true);
-      if (initialMovies.length) {
-        handleSearchAndFilter(initialMovies, searchQuery);
+      if (localStorage.getItem('storageAllMovies')) {
+        const movies = JSON.parse(
+          localStorage.getItem('storageAllMovies')
+        );
+        handleSearchAndFilter(movies, searchQuery);
       } else {
         const moviesData = await onSearch();
         if (moviesData) {
           setInitialMovies(moviesData);
           handleSearchAndFilter(moviesData, searchQuery);
+          localStorage.setItem('storageAllMovies', JSON.stringify(moviesData));
         }
       }
     },
-    [handleSearchAndFilter, initialMovies, onSearch]
+    [handleSearchAndFilter, onSearch]
   );
 
   const handleOnFilterClick = React.useCallback(
