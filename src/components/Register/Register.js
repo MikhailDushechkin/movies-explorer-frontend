@@ -1,16 +1,21 @@
+import { Navigate } from 'react-router-dom';
+
 import './Register.css';
 
 import AuthScreen from '../AuthScreen/AuthScreen';
 import useValidation from '../../hooks/useValidation';
 
-function Register() {
+import { USER_NAME_REG_EXP } from "../../utils/constants";
+
+function Register({ handleRegister, isLoading, loggedIn }) {
   const { values, errors, isFormValid, onChange } = useValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
+    handleRegister(values.name, values.email, values.password);
   }
 
-  return (
+  return !loggedIn ? (
     <main className="register">
       <AuthScreen
         title="Добро пожаловать!"
@@ -31,9 +36,11 @@ function Register() {
             required
             minLength="2"
             maxLength="30"
+            pattern={USER_NAME_REG_EXP}
             id="name-input"
             placeholder="Миша"
             onChange={onChange}
+            disabled={isLoading ? true : false}
             value={values.name || ''}
           />
           <span
@@ -57,6 +64,7 @@ function Register() {
             id="email-input"
             placeholder="misha@yandex.ru"
             onChange={onChange}
+            disabled={isLoading ? true : false}
             value={values.email || ''}
           />
           <span
@@ -82,6 +90,7 @@ function Register() {
             id="password-input"
             placeholder="******"
             onChange={onChange}
+            disabled={isLoading ? true : false}
             value={values.password || ''}
           />
           <span
@@ -94,6 +103,8 @@ function Register() {
         </label>
       </AuthScreen>
     </main>
+  ) : (
+    <Navigate to="/" replace />
   );
 }
 

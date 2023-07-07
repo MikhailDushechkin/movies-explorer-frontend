@@ -1,0 +1,102 @@
+.popup {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.4s, opacity 0.4s ease;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup_opened {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup__container {
+  position: relative;
+  width: 430px;
+  background: #ffffff;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 34px 36px 37px 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup__icon {
+  width: 120px;
+  height: 120px;
+  margin: 26px auto 32px auto;
+}
+
+.popup__title {
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+  margin: 0;
+  padding: 0 0 23px 0;
+}
+
+.popup__close-button {
+  background: url(../../images/edit-form-close-button.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  top: -40px;
+  right: -40px;
+  transition: opacity 0.3s ease;
+}
+
+.popup__close-button:hover {
+  opacity: 0.6;
+}
+
+.popup__close-button:focus {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 660px) {
+  .popup__container {
+    width: 282px;
+    padding: 25px 22px 25px 22px;
+  }
+
+  .popup__icon {
+    margin: 25px auto 40px auto;
+  }
+
+  .popup__title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .popup__close-button {
+    width: 20px;
+    height: 20px;
+    top: -30px;
+    right: -30px;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .popup__close-button {
+    top: -36px;
+    right: 0;
+  }
+}

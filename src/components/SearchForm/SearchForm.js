@@ -1,19 +1,46 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 import './SearchForm.css';
 
-function SearchForm({ handleSubmitSearch }) {
-  const [keyWord, setKeyWord] = React.useState('');
-  const [isShort, setIsShot] = React.useState(false);
+function SearchForm({
+  onSearch,
+  onFilterChange,
+  isFiltered,
+  isSearched,
+  setQueryError,
+}) {
+  const [searchQuery, setSearchQuery] = React.useState('');
 
-  const handleInputKeyWord = (evt) => setKeyWord(evt.target.value);
+  const { pathname } = useLocation();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    handleSubmitSearch(keyWord);
+    if (pathname === '/movies') {
+      searchQuery ? onSearch(searchQuery) : setQueryError(true);
+    } else {
+      onSearch(searchQuery);
+    }
   };
+
+  React.useEffect(() => {
+    if (pathname === '/movies' && localStorage.getItem('storageMoviesSearch')) {
+      const savedSearchQuery = localStorage.getItem('storageMoviesSearch');
+      setSearchQuery(savedSearchQuery);
+    } else if (
+      pathname === '/saved-movies' &&
+      localStorage.getItem('storageSavedMoviesSearch')
+    ) {
+      const savedSearchQuery = localStorage.getItem('storageSavedMoviesSearch');
+      setSearchQuery(savedSearchQuery);
+    }
+  }, [pathname]);
+
+  React.useEffect(() => {
+    setQueryError(false);
+  }, [searchQuery]);
 
   return (
     <section className="search-form">
@@ -27,13 +54,14 @@ function SearchForm({ handleSubmitSearch }) {
           onSubmit={handleSubmit}
         >
           <input
-            value={keyWord}
+            value={searchQuery || ''}
             className="search-form__input"
             type="text"
-            name="search"
+            name="keyWord"
+            id="keyWord"
             placeholder="Фильм"
             required
-            onChange={handleInputKeyWord}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             className="search-form__submit-button"
@@ -41,7 +69,11 @@ function SearchForm({ handleSubmitSearch }) {
             aria-label="Поиск"
           />
         </form>
-        <FilterCheckbox isShort={isShort} setIsShot={setIsShot} />
+        <FilterCheckbox
+          onFilterChange={onFilterChange}
+          isFiltered={isFiltered}
+          isSearched={isSearched}
+        />
       </div>
     </section>
   );
